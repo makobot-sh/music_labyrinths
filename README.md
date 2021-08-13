@@ -3,6 +3,17 @@
 Generate Labyrinth screensaver in the style of [Windows 95's 3d maze screensaver](https://www.youtube.com/watch?v=oRL5durPleI) that moves to the beat of your [OSU! beatmap](https://osu.ppy.sh) of choice! 
 Load any OSU! beatmap into the file generator, then load that file into the player and enjoy~
 
+## Problemas a resolver
+Tema 1:
+Extraer la informacion de OSU y parsearla
+Tema 2:
+Generar el laberinto
+Tema 3:
+Generar el movimiento de camara
+Tema 4: Leer la informacion del laberinto generado y modelara en 3D
+Tema 5: Mezclar tema 4 y tema 3
+Tema 6: Conectar la camara con la musica
+
 ## TODO
 - Labyrinth automatic generation (start in 2d to warm up)
 - figure out osu documentation
