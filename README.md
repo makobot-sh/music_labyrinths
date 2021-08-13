@@ -10,6 +10,7 @@
 - Generate screensaver once by loading file into the program, then running the program is parsing that file on the fly (no duplicate labyrinth generation or on the fly laybrinth generation)
 
 ## Osu documentation notes
+https://osu.ppy.sh/wiki/en/osu%21_File_Formats/Osu_%28file_format%29
 ### hit objects key:
 - \[0,1\] posiciones en pixel en pantalla (x,y)
 - \[2\] ms del beatmap en el que arranca el hit object
