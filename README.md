@@ -1,5 +1,8 @@
 # Music labyrinths
 
+Generate Labyrinth screensaver in the style of [Windows 95's 3d maze screensaver](https://www.youtube.com/watch?v=oRL5durPleI) that moves to the beat of your [OSU! beatmap](https://osu.ppy.sh) of choice! 
+Load any OSU! beatmap into the file generator, then load that file into the player and enjoy~
+
 ## TODO
 - Labyrinth automatic generation (start in 2d to warm up)
 - figure out osu documentation
@@ -8,6 +11,8 @@
 - Complete graph with as many nodes as hit points
     + Get Spanning Tree by trimming connections so that we have a path to the end and the whole graph is interconnected.
 - Generate screensaver once by loading file into the program, then running the program is parsing that file on the fly (no duplicate labyrinth generation or on the fly laybrinth generation)
+- Volume slider during execution
+- Pause button during execution?
 
 ## Osu documentation notes
 https://osu.ppy.sh/wiki/en/osu%21_File_Formats/Osu_%28file_format%29
