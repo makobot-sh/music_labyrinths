@@ -25,7 +25,7 @@ plane.position.set( -50, 0, 0 );
 plane.rotation.y += aux.deg2rad(90);
 scene.add( plane );
 
-const p2 = aux.createPlane([50,50],0xffff00, [50,0,0], [90,0,0]);
+const p2 = aux.createPlane([50,50],0xffff00, [50,0,0], [0,90,0]);
 scene.add(p2)
 
 //3. Create render/animate loop

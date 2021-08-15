@@ -16,7 +16,10 @@ export function createPlane(dimentions, color, pos, deg)
   const material = new THREE.MeshBasicMaterial( {color: color, side: THREE.DoubleSide} );
   const plane = new THREE.Mesh( geometry, material );
   plane.position.set(pos[0],pos[1],pos[2]);
-  const rot = new THREE.Vector3(deg2rad(deg[0]),deg2rad(deg[1]),deg2rad(deg[2]));
-  plane.rotation.set(rot);
+  //const rot = new THREE.Vector3(deg2rad(deg[0]),deg2rad(deg[1]),deg2rad(deg[2]));
+  const rot = new THREE.Vector3(0, Math.PI /2, 0);
+  plane.rotation.x = deg2rad(deg[0]);
+  plane.rotation.y = deg2rad(deg[1]);
+  plane.rotation.z = deg2rad(deg[2]);
   return plane;
 };
