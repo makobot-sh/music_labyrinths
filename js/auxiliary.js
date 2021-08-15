@@ -1,0 +1,22 @@
+export function deg2rad(deg)
+{
+  var pi = Math.PI;
+  return deg * pi/180;
+};
+
+export function rad2deg(radians)
+{
+  var pi = Math.PI;
+  return radians * (180/pi);
+};
+
+export function createPlane(dimentions, color, pos, deg)
+{
+  const geometry = new THREE.PlaneGeometry( dimentions[0], dimentions[1]);
+  const material = new THREE.MeshBasicMaterial( {color: color, side: THREE.DoubleSide} );
+  const plane = new THREE.Mesh( geometry, material );
+  plane.position.set(pos[0],pos[1],pos[2]);
+  const rot = new THREE.Vector3(deg2rad(deg[0]),deg2rad(deg[1]),deg2rad(deg[2]));
+  plane.rotation.set(rot);
+  return plane;
+};
