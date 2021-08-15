@@ -26,6 +26,7 @@ def convert_lines_to_dictionary(data_set):
 
 if __name__ == "__main__":
 	data = []
+	print("Reading SVG file...")
 	with open('./mazegenerator/src/maze.svg') as file:
 		data = file.read()
 
@@ -33,13 +34,15 @@ if __name__ == "__main__":
 	height = get_svg_height(data)
 	width  = get_svg_width(data)
 
+
 	lines_with_points = get_svg_lines(data)
 
 	data_set = {"Height" : height[0], "Width" : width[0]}
 	data_set = convert_lines_to_dictionary(data_set)
-	with open('data.json', 'w', encoding='utf-8') as f:
+	print("Converting to JSON...")
+	with open('data_lines.json', 'w', encoding='utf-8') as f:
 		json.dump(data_set, f, ensure_ascii=False, indent=4)
-	
+	print("Done!")
 
 
 	
