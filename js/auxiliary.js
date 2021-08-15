@@ -1,3 +1,5 @@
+export var ninetyDeg = '+1.5707963267948966';
+export var rotSpeed = 250;
 export function deg2rad(deg)
 {
   var pi = Math.PI;
