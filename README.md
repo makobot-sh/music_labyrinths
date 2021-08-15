@@ -10,7 +10,7 @@ Extract OSU's beatmap information and do the parsing
 
 Problem 2:
 
-Generate the labyrinth
+Generate the labyrinth - MADE
 
 Problem 3:
 
