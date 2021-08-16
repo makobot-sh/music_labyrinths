@@ -33,7 +33,7 @@ aux.createPlane(scene, [200,50],0x00ff00, [0 -200,0,0], [0,90,0]);
 var targetPos = new THREE.Vector3( -25, 0, -75 );
 var rotLeft = aux.deg2rad(90);
 console.log(rotLeft);
-var tween1 = new TWEEN.Tween( camera.position ).to( targetPos, 1000 );
+var tween1 = new TWEEN.Tween( camera.position ).to( {x:"+0",y:"+0",z:"-75"}, 1000 );
 var tween2 = new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed);
 
 tween1.chain(tween2);
