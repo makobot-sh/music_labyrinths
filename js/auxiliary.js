@@ -3,11 +3,32 @@ export {
   rotSpeed,
   deg2rad,
   rad2deg,
-  createPlane
+  createPlane,
+  quit_direction,
+  inicialize_square_matrix
 }
 
 var ninetyDeg = '1.5707963267948966';
 var rotSpeed = 250;
+
+function quit_direction(matrix, x_value, y_value, mask){
+  matrix[y_value][x_value] = matrix[y_value][x_value] & mask;
+}
+
+
+function inicialize_square_matrix(dimension, value){
+  var matrix = []
+  for(var i = 0; i < dimension; i++){
+      var aux = [];
+      for(var j = 0; j < dimension; j++){
+          aux.push(value);
+      }
+      matrix.push(aux);
+  }
+  return matrix;
+}
+
+
 function deg2rad(deg)
 {
   var pi = Math.PI;
