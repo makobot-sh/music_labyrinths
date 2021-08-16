@@ -7,7 +7,7 @@ const camera = new THREE.PerspectiveCamera( 75, //FOV (in degrees)
     1, //Near clipping plane (objects nearer won't be rendered)
     500 ); //Far clipping plane (object further won't be rendered)
 
-camera.position.set( -25, 0, 50);
+camera.position.set( -25, 0, 75);
 //camera.lookAt( 0, 0, 0 )
 
 const renderer = new THREE.WebGLRenderer();
@@ -27,16 +27,28 @@ aux.createPlane(scene, [100,50],0x00ffff, [-50 -100/2,0,-50], [0,0,0]);
 //green walls
 aux.createPlane(scene, [100,50],0x00ff00, [0 -50 -100  ,0,0], [0,90,0]);
 aux.createPlane(scene, [200,50],0x00ff00, [0 -200,0,0], [0,90,0]);
-//
+//magenta walls
+aux.createPlane(scene, [200,50],0xff00ff, [0 - 200/2,0,100], [0,0,0]);
+aux.createPlane(scene, [100,50],0xff00ff, [-50 -100/2,0,50], [0,0,0]);
 
-
-var targetPos = new THREE.Vector3( -25, 0, -75 );
-var rotLeft = aux.deg2rad(90);
-console.log(rotLeft);
-var tween1 = new TWEEN.Tween( camera.position ).to( {x:"+0",y:"+0",z:"-75"}, 1000 );
-var tween2 = new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed);
+var tweenRot = new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed);
+var tween1 = new TWEEN.Tween( camera.position ).to( {x:"+0",y:"+0",z:"-150"}, 2000 ).onComplete(function(){
+    new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
+});
+var tween2 = new TWEEN.Tween( camera.position ).to( {x:"-150",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
+    new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
+});
+var tween3 = new TWEEN.Tween( camera.position ).to( {x:"+0",y:"+0",z:"+150"}, 2000 ).onComplete(function(){
+    new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
+});
+var tween4 = new TWEEN.Tween( camera.position ).to( {x:"+150",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
+    new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
+});
 
 tween1.chain(tween2);
+tween2.chain(tween3);
+tween3.chain(tween4);
+tween4.chain(tween1);
 tween1.start();
 
 
