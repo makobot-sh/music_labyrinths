@@ -42,8 +42,9 @@ let walls = [
 ];
 
 let animCube = new Animation(cube);
-
-console.log(animCube.generateMovements(walls, times));
+let movements = animCube.generateMovements(walls, times);
+console.log(movements);
+animCube.animateSeries(movements);
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*

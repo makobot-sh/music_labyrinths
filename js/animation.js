@@ -1,4 +1,4 @@
-import {ninetyDeg, rotSpeed} from './auxiliary-three.js';
+import {ninetyDeg, rotSpeed, blinkSpeed} from './auxiliary-three.js';
 export {
     movs,
     Animation,
@@ -236,5 +236,20 @@ class Animation {
         //    mov  : the type of movement (a value like those in the "movs" dict)
         //    t    : the duration of the movement
         //    beat : whether the movement is on beat or not
+        var firstTween = this.move(movements[0].mov,movements[0].t);
+        var lastTween = firstTween;
+        for (let i = 1; i < movements.length; ++i) {
+            let action = movements[i];
+            let nextTween = this.move(movements[i].mov,movements[i].t);
+            if(action.beat){
+                //make cube blink
+                let blinkTween = new TWEEN.Tween( this.obj.material.color ).to( {"r":1,"g":0,"b":0}, blinkSpeed).chain(new TWEEN.Tween( this.obj.material.color ).to( {"r":0,"g":1,"b":0}, blinkSpeed));
+                lastTween.chain(nextTween,blinkTween);
+            } else {
+                lastTween.chain(nextTween);
+            }
+            lastTween = nextTween;
+        }
+        firstTween.start();
     }
 }

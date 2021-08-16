@@ -1,6 +1,7 @@
 export {
   ninetyDeg,
   rotSpeed,
+  blinkSpeed,
   deg2rad,
   rad2deg,
   createPlane,
@@ -8,7 +9,7 @@ export {
 
 var ninetyDeg = '1.5707963267948966';
 var rotSpeed = 250;
-
+var blinkSpeed = 100;
 
 function deg2rad(deg)
 {
