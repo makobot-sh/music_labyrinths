@@ -41,8 +41,7 @@ let walls = [
 
 let animCube = new Animation(cube);
 
-console.log(animCube.generateMovements(walls, times))
-
+console.log(animCube.generateMovements(walls, times));
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
@@ -88,6 +87,7 @@ function animate() {
 }
 
 
+
 function generate_maze(){
     // 2. Adding the planes based in the JSON data
     //Read the JSON file
@@ -95,23 +95,57 @@ function generate_maze(){
     .then(response => response.json())
     .then(json => { 
         var incrementador = 0;
+        var matrix = []
+        var down_bitwise = 0b1101
+        var up_bitwise = 0b1110
+        var left_bitwise = 0b0111
+        var right_bitwise = 0b1011
+        var high = 30;
+        //LRDU
         //Generate the lines given by the JSON (the first two are omitted)
         for (var key in json) {
-            incrementador = incrementador + 1
+            if (key == "Height"){
+                var height = (json[key]+1)/high;
+                matrix = aux.inicialize_square_matrix(json[key], 0b1111);
+            }
+            incrementador += 1; 
             if (incrementador > 2){
                 let x1 = Math.floor(json[key].x1);
                 let x2 = Math.floor(json[key].x2);
                 let y1 = Math.floor(json[key].y1);
                 let y2 = Math.floor(json[key].y2);
+                let x_value = x1/high;
+                let y_value = y1/high;
                 if (y1 == y2){
-                    aux.createPlane(scene, [30,30],0x00ffff, [x1,0,-y1], [0,0,0]);
+                    //0bLRDU 
+                    //The coordinates corresponds with the node that is above of them.
+                  
+                    if (y_value < height){
+                        quit_direction(matrix, x_value, y_value, down_bitwise)
+                    }
+                    //The Up direction is quit, we have to check if is not the limit of the maze
+                    if (y_value > 0){
+                        quit_direction(matrix, x_value, y_value - 1, up_bitwise)
+                    }
+                    aux.createPlane(scene, [30, high], 0x00ffff, [x1,0,-y1], [0,0,0]);
                 } else {
-                    aux.createPlane(scene, [30,30],0xffff00, [x2-15,0,-y2+15], [0,90,0]);
+                    
+                    //The coordinates corresponds with the node that is at the right of them.
+                    if (x_value < height){
+                        aux.quit_direction(matrix, x_value, y_value, left_bitwise)  
+                    }
+                   
+                    if (x_value > 0){
+                        aux.quit_direction(matrix, x_value - 1, y_value, right_bitwise)  
+                    }
+
+                    aux.createPlane(scene, [30,high],0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
                 }
+               
             };
         }
-        //aux.createPlane(scene, [30,30],0x00ff00, [-15,0,-15], [0,90,0]);
+        //Entry Point
+        aux.createPlane(scene, [30,30],0x00ff00, [-15,0,-15], [0,90,0]);
     }
     );
-    //aux.createPlane(scene, [30,30],0x00ff00, [x1,0,-y1], [0,0,0]);
 }
