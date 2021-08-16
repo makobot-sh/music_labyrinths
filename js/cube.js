@@ -31,13 +31,17 @@ generate_maze();
 //var animCube = new Animation(cube);
 //animCube.move(movs.UP,2000).chain(animCube.move(movs.DOWN,2000)).start();
 
-let times = [0,1000,2000,3000,3250,3500,3750,4000];
-let dirs = [
-    [3,3,3],
-    [1,4,4],
-    [1,4,4]
+let times = [1000,1100,1150,2000];
+// binary: 0bLRDU - Left, Right, Down, Up
+let walls = [
+    new Uint8Array([0b1001,0b0010,0b0111]),
+    new Uint8Array([0b1000,0b0011,0b0011]),
+    new Uint8Array([0b1110,0b1011,0b0011])
 ];
 
+let animCube = new Animation(cube);
+
+console.log(animCube.generateMovements(walls, times))
 
 
 //3. Create render/animate loop

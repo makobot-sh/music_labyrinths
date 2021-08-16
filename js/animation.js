@@ -14,6 +14,7 @@ const movs = {
     ROTR: 6,
 }
 
+// TODO: delete?
 const movsN = {
     0: movs.NONE,
     1: movs.UP,
@@ -22,6 +23,108 @@ const movsN = {
     4: movs.RIGHT,
     5: movs.ROTL,
     6: movs.ROTR,
+}
+
+// binary: 0bLRDU - Left, Right, Down, Up
+const maskUP    = 0b0001;
+const maskDOWN  = 0b0010;
+const maskRIGHT = 0b0100;
+const maskLEFT  = 0b1000;
+
+function getMask(mov){
+    let res;
+    switch (mov) {
+        case movs.UP:
+            res = maskUP;
+            break;
+        case movs.DOWN:
+            res = maskDOWN;
+            break;
+        case movs.RIGHT:
+            res = maskRIGHT;
+            break;
+        case movs.LEFT:
+            res = maskLEFT;
+            break;
+    }
+    return res;
+}
+
+Array.prototype.sample = function(){
+    return this[Math.floor(Math.random()*this.length)];
+}
+
+class Movement {
+    constructor(mov){
+        this.mov = mov;
+    }
+    
+    forward(){ return this.mov; }
+
+    behind(){
+        let res;
+        switch (this.mov) {
+            case movs.UP:
+                res = movs.DOWN;
+                break;
+            case movs.DOWN:
+                res = movs.UP;
+                break;
+            case movs.RIGHT:
+                res = movs.LEFT;
+                break;
+            case movs.LEFT:
+                res = movs.RIGHT;
+                break;
+            case movs.ROTR:
+                res = movs.ROTL;
+                break;
+            case movs.ROTL:
+                res = movs.ROTR;
+                break;
+        }   
+        return res;
+    }
+
+    left(){
+        let res;
+        switch (this.mov) {
+            case movs.LEFT:
+                res = movs.DOWN;
+                break;
+            case movs.RIGHT:
+                res = movs.UP;
+                break;
+            case movs.UP:
+                res = movs.LEFT;
+                break;
+            case movs.DOWN:
+                res = movs.RIGHT;
+                break;
+        }   
+        return res;
+    }
+
+    right(){
+        let res;
+        switch (this.mov) {
+            case movs.LEFT:
+                res = movs.UP;
+                break;
+            case movs.RIGHT:
+                res = movs.DOWN;
+                break;
+            case movs.UP:
+                res = movs.RIGHT;
+                break;
+            case movs.DOWN:
+                res = movs.LEFT;
+                break;
+        }   
+        return res;
+    }
+
+    mask(){ return getMask(this.mov); }
 }
 
 class Animation {
@@ -56,7 +159,83 @@ class Animation {
         return tween;
     }
 
-    animateSeries(dirs, times){
+    generateMovements(walls, times){
+        let pos = {"x" : walls.length-1, "y" : 0};
+        let timer = 0;
+        var movements = []
+        let viewDir = new Movement(movs.UP);
+        for ( let beat of times ) {
+            let dirs = []
+            let currWalls = walls[pos.x][pos.y]
+            if ( beat > timer ){
+                if ( beat-timer > rotSpeed ){
+                    // If difference is bigger than rotSpeed, i have enough time 
+                    // to rotate and go to next point, else i can only move
+                    // in the direction i was to be able to hit this time
+                    if( currWalls & getMask(viewDir.left()) ){ dirs.push(viewDir.left()) };
+                    if( currWalls & getMask(viewDir.right()) ){ dirs.push(viewDir.right()) };    
+                }
+                if ( currWalls & viewDir.mask() ){ dirs.push(viewDir.forward()) };
 
+                if ( currWalls == getMask(viewDir.behind()) && beat-timer > rotSpeed*2 ){
+                    // Trapped, can only move behind
+                    // Will only happen in this beat
+                    dirs.push(viewDir.behind());
+                }
+                
+                if( dirs.length > 0 ){
+                    let dir = dirs.sample();
+                    let movDuration = beat - timer;
+
+                    if(dir == viewDir.left()) {
+                        // need to rotate once
+                        movDuration -= rotSpeed; //take out rotation duration from foward movement duration 
+                        movements.push({ "mov" : movs.ROTL, "t" : rotSpeed, "beat" : true});
+                    } else if (dir == viewDir.right()) {
+                        // need to rotate once
+                        movDuration -= rotSpeed;
+                        movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : true});
+                    } else if (dir == viewDir.behind()) {
+                        // need to rotate twice
+                        movDuration -= rotSpeed*2;
+                        movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : true});
+                        movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : false});
+                    }                    
+                    movements.push({ "mov" : dir, "t" : movDuration, "beat" : dir == viewDir.forward()});
+                    timer = beat + movDuration;
+
+                    switch (dir) {
+                        case movs.LEFT:
+                            pos.x -= 1;
+                            break;
+                        case movs.RIGHT:
+                            pos.x += 1;
+                            break;
+                        case movs.UP:
+                            pos.y -= 1;
+                            break;
+                        case movs.DOWN:
+                            pos.y += 1;
+                            break;
+                    }
+
+                }
+
+                //If no movement was pushed, we skip this beat
+                continue;
+            } else {
+                // beat <= timer
+                // Last movement took too long, so this beat is skipped
+                continue;
+            }
+        }
+        return movements;
+    }
+
+    animateSeries(movements){
+        // movements is an array of objects with the following properties:
+        //    mov  : the type of movement (a value like those in the "movs" dict)
+        //    t    : the duration of the movement
+        //    beat : whether the movement is on beat or not
     }
 }
