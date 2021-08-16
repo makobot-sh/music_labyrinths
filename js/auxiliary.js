@@ -12,7 +12,7 @@ export function rad2deg(radians)
   return radians * (180/pi);
 };
 
-export function createPlane(dimentions, color, pos, deg)
+export function createPlane(scene, dimentions, color, pos, deg)
 {
   const geometry = new THREE.PlaneGeometry( dimentions[0], dimentions[1]);
   const material = new THREE.MeshBasicMaterial( {color: color, side: THREE.DoubleSide} );
@@ -23,5 +23,5 @@ export function createPlane(dimentions, color, pos, deg)
   plane.rotation.x = deg2rad(deg[0]);
   plane.rotation.y = deg2rad(deg[1]);
   plane.rotation.z = deg2rad(deg[2]);
-  return plane;
+  scene.add(plane);
 };

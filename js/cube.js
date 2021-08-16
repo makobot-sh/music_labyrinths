@@ -2,13 +2,13 @@ import * as aux from './auxiliary.js';
 // 0. Our Javascript will go here.
 // 1. Creating the scene
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 45, //FOV (in degrees)
+const camera = new THREE.PerspectiveCamera( 75, //FOV (in degrees)
     window.innerWidth / window.innerHeight, //Aspect ratio
     1, //Near clipping plane (objects nearer won't be rendered)
     500 ); //Far clipping plane (object further won't be rendered)
 
-camera.position.set( 0, 0, 0 );
-camera.lookAt( 0, 0, 0 )
+camera.position.set( -25, 0, 50);
+//camera.lookAt( 0, 0, 0 )
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, //Size at which we render our app (width, height)
@@ -18,17 +18,19 @@ renderer.setSize( window.innerWidth, //Size at which we render our app (width, h
 document.body.appendChild( renderer.domElement ); //<canvas> element our renderer uses to display the scene to us
 
 // 2. Adding the plane
-const geometry = new THREE.PlaneGeometry( 100, 50 );
-const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-const plane = new THREE.Mesh( geometry, material );
-plane.position.set( -25, 0, -50 );
-plane.rotation.y += aux.deg2rad(90);
-scene.add( plane );
+//yellow walls
+aux.createPlane(scene, [100,50],0xffff00, [-50,0,0], [0,90,0]);
+aux.createPlane(scene, [200,50],0xffff00, [0,0,0], [0,90,0]);
+//cyan walls
+aux.createPlane(scene, [200,50],0x00ffff, [0 - 200/2,0,-100], [0,0,0]);
+aux.createPlane(scene, [100,50],0x00ffff, [-50 -100/2,0,-50], [0,0,0]);
+//green walls
+aux.createPlane(scene, [100,50],0x00ff00, [0 -50 -100  ,0,0], [0,90,0]);
+aux.createPlane(scene, [200,50],0x00ff00, [0 -200,0,0], [0,90,0]);
+//
 
-const p2 = aux.createPlane([100,50],0xffff00, [25,0,-50], [0,90,0]);
-scene.add(p2)
 
-var targetPos = new THREE.Vector3( 0, 0, -50 );
+var targetPos = new THREE.Vector3( -25, 0, -75 );
 var rotLeft = aux.deg2rad(90);
 console.log(rotLeft);
 var tween1 = new TWEEN.Tween( camera.position ).to( targetPos, 1000 );
