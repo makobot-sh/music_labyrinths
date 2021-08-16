@@ -48,6 +48,7 @@ animate();
 function animate() {
     requestAnimationFrame( animate );
     TWEEN.update();
+    camera.position.set( cube.position.x, 300, cube.position.z );
     //4. Animating movement
     // 1200 
     // move from (0,0,0) to (0,0,-50)

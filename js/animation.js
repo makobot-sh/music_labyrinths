@@ -151,7 +151,7 @@ class Animation {
             case movs.ROTL:
                 tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '+'+ninetyDeg} , rotSpeed);
                 break;
-            case movs.RIGHT:
+            case movs.ROTR:
                 tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '-'+ninetyDeg} , rotSpeed);
                 break;
         }
