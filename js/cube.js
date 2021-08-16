@@ -8,8 +8,8 @@ const camera = new THREE.PerspectiveCamera( 75, //FOV (in degrees)
     1, //Near clipping plane (objects nearer won't be rendered)
     700 ); //Far clipping plane (object further won't be rendered)
 
-camera.position.set( 400, 700, -450);
-camera.lookAt( 400, 0, -450)
+camera.position.set( 0, 0, 0);
+//camera.lookAt( 30, 0, -5)
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, //Size at which we render our app (width, height)
@@ -44,16 +44,12 @@ function tween_animation(){
     var tween4 = new TWEEN.Tween( camera.position ).to( {x:"+1500",y:"+0",z:"+0"}, 20000 ).onComplete(function(){
         new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
     });
-}
-
-  
-tween1.chain(tween2);
-tween2.chain(tween3);
-tween3.chain(tween4);
-tween4.chain(tween1);
-//tween1.start()
-
-}
+    tween1.chain(tween2);
+    tween2.chain(tween3);
+    tween3.chain(tween4);
+    tween4.chain(tween1);
+    //tween1.start()    
+};
 
 function animate() {
     requestAnimationFrame( animate );
