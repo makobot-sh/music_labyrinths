@@ -30,7 +30,11 @@ const cube = new THREE.Mesh( geometry, material ); //a Mesh takes a geometry and
 cube.position.set( 0, 0, -15);
 scene.add( cube ); // by default, it is added at (0,0,0)
 
-let times = [1000,1500,2000,2500,2700,3000,3500,4000];
+//let times = [1000,1500,2000,2500,2700,3000,3500,4000];
+let times = [1000]
+for(var i = 0; i < 400; i++){
+    times.push(i*500);
+}
 
 let animCube = new Animation(cube);
 //let movements = animCube.generateMovements(walls, times);

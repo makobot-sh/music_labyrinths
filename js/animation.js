@@ -1,4 +1,5 @@
 import {ninetyDeg, rotSpeed, blinkSpeed} from './auxiliary-three.js';
+import {quit_direction} from './auxiliary-javascript.js';
 export {
     movs,
     Animation,
@@ -162,11 +163,11 @@ class Animation {
     generateMovements(walls, times){
         let pos = {"x" : 0, "y" : 0};
         let timer = 0;
-        var movements = []
+        var movements = [];
         let viewDir = new Movement(movs.UP);
         for ( let beat of times ) {
-            let dirs = []
-            let currWalls = walls[pos.y][pos.x]
+            let dirs = [];
+            let currWalls = walls[pos.y][pos.x];
             if ( beat > timer ){
                 if ( beat-timer > rotSpeed ){
                     // If difference is bigger than rotSpeed, i have enough time 
@@ -182,6 +183,25 @@ class Animation {
                     // Trapped, can only move behind
                     // Will only happen in this beat
                     dirs.push(viewDir.behind());
+                    // Don't come back to this spot (we wall it off)
+                    switch (viewDir.behind()){
+                        case movs.UP:
+                            quit_direction(walls,   pos.x,   pos.y, maskUP_NEGATE);
+                            quit_direction(walls,   pos.x, pos.y+1, maskDOWN_NEGATE);
+                            break;
+                        case movs.DOWN:
+                            quit_direction(walls,   pos.x,   pos.y, maskDOWN_NEGATE);
+                            quit_direction(walls,   pos.x, pos.y-1, maskUP_NEGATE);
+                            break;
+                        case movs.LEFT:
+                            quit_direction(walls,   pos.x,   pos.y, maskLEFT_NEGATE);
+                            quit_direction(walls, pos.x-1,   pos.y, maskRIGHT_NEGATE);
+                            break;
+                        case movs.RIGHT:
+                            quit_direction(walls,   pos.x,   pos.y, maskRIGHT_NEGATE);
+                            quit_direction(walls, pos.x+1,   pos.y, maskLEFT_NEGATE);
+                            break;
+                    }
                 }
                 
                 if( dirs.length > 0 ){
