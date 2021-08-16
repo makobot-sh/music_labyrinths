@@ -1,5 +1,6 @@
-import * as aux from './auxiliary.js';
-import {movs,Animation} from './animation.js';
+import * as auxJs from './auxiliary-javascript.js';
+import * as auxThree from './auxiliary-three.js';
+import {movs,Animation, maskUP_NEGATE, maskDOWN_NEGATE, maskRIGHT_NEGATE, maskLEFT_NEGATE} from './animation.js';
 
 // 0. Our Javascript will go here.
 // 1. Creating the scene
@@ -26,7 +27,8 @@ const cube = new THREE.Mesh( geometry, material ); //a Mesh takes a geometry and
 cube.position.set( 0, 0, -15);
 scene.add( cube ); // by default, it is added at (0,0,0)
 
-generate_maze();
+var matrix = generate_maze();
+console.log(matrix)
 //tween_animation(cube);
 //var animCube = new Animation(cube);
 //animCube.move(movs.UP,2000).chain(animCube.move(movs.DOWN,2000)).start();
@@ -41,7 +43,7 @@ let walls = [
 
 let animCube = new Animation(cube);
 
-console.log(animCube.generateMovements(walls, times));
+//console.log(animCube.generateMovements(walls, times));
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
@@ -50,29 +52,7 @@ animate();
 
 /* ============================================================== */
 
-function tween_animation(obj){
-    let tweenRot = new TWEEN.Tween( obj.rotation ).to( {y: '+'+aux.ninetyDeg} , aux.rotSpeed);
-    let tweenDer = new TWEEN.Tween( obj.position ).to( {x:"+30",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
-        tweenRot.start();
-    });
-    
-    let tweenUp = new TWEEN.Tween( obj.position ).to( {x:"+0",y:"+0",z:"-30"}, 2000 ).onComplete(function(){
-        tweenRot.start();
-    });
-    
-    let tweenDown = new TWEEN.Tween( obj.position ).to( {x:"+0",y:"+0",z:"+30"}, 2000 ).onComplete(function(){
-        tweenRot.start();
-    });
 
-    let tweenLeft = new TWEEN.Tween( obj.position ).to( {x:"-30",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
-        tweenRot.start();
-    });
-    tweenDer.chain(tweenUp);
-    tweenUp.chain(tweenLeft);
-    tweenLeft.chain(tweenDown);
-    tweenDown.chain(tweenDer);
-    tweenDer.start()    
-};
 
 function animate() {
     requestAnimationFrame( animate );
@@ -87,65 +67,57 @@ function animate() {
 }
 
 
-
-function generate_maze(){
-    // 2. Adding the planes based in the JSON data
+async function generate_maze(){
+  
     //Read the JSON file
-    fetch("../parser/data_lines.json")
-    .then(response => response.json())
-    .then(json => { 
-        var incrementador = 0;
-        var matrix = []
-        var down_bitwise = 0b1101
-        var up_bitwise = 0b1110
-        var left_bitwise = 0b0111
-        var right_bitwise = 0b1011
-        var high = 30;
-        //LRDU
-        //Generate the lines given by the JSON (the first two are omitted)
-        for (var key in json) {
-            if (key == "Height"){
-                var height = (json[key]+1)/high;
-                matrix = aux.inicialize_square_matrix(json[key], 0b1111);
-            }
-            incrementador += 1; 
-            if (incrementador > 2){
-                let x1 = Math.floor(json[key].x1);
-                let x2 = Math.floor(json[key].x2);
-                let y1 = Math.floor(json[key].y1);
-                let y2 = Math.floor(json[key].y2);
-                let x_value = x1/high;
-                let y_value = y1/high;
-                if (y1 == y2){
-                    //0bLRDU 
-                    //The coordinates corresponds with the node that is above of them.
-                  
-                    if (y_value < height){
-                        quit_direction(matrix, x_value, y_value, down_bitwise)
-                    }
-                    //The Up direction is quit, we have to check if is not the limit of the maze
-                    if (y_value > 0){
-                        quit_direction(matrix, x_value, y_value - 1, up_bitwise)
-                    }
-                    aux.createPlane(scene, [30, high], 0x00ffff, [x1,0,-y1], [0,0,0]);
-                } else {
-                    
-                    //The coordinates corresponds with the node that is at the right of them.
-                    if (x_value < height){
-                        aux.quit_direction(matrix, x_value, y_value, left_bitwise)  
-                    }
-                   
-                    if (x_value > 0){
-                        aux.quit_direction(matrix, x_value - 1, y_value, right_bitwise)  
-                    }
+    var json = await auxJs.getJson("../parser/data_lines.json")
+    var incrementador = 0;
+    var high = 30;
+    var matrix = []
 
-                    aux.createPlane(scene, [30,high],0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
-                }
-               
-            };
+    //LRDU
+    //Generate the lines given by the JSON (the first two are omitted)
+    for (var key in json) {
+        if (key == "Height"){
+            var height = (json[key]+1)/high;
+            matrix = auxJs.inicialize_square_matrix(json[key], 0b1111);
         }
-        //Entry Point
-        aux.createPlane(scene, [30,30],0x00ff00, [-15,0,-15], [0,90,0]);
+        incrementador += 1; 
+        if (incrementador > 2){
+            let x1 = Math.floor(json[key].x1);
+            let x2 = Math.floor(json[key].x2);
+            let y1 = Math.floor(json[key].y1);
+            let y2 = Math.floor(json[key].y2);
+            let x_value = x1/high;
+            let y_value = y1/high;
+            if (y1 == y2){
+                //0bLRDU 
+                //The coordinates corresponds with the node that is above of them.
+                if (y_value < height){
+                    auxJs.quit_direction(matrix, x_value, y_value, maskDOWN_NEGATE)
+                }
+                //The Up direction is quit, we have to check if is not the limit of the maze
+                if (y_value > 0){
+                    auxJs.quit_direction(matrix, x_value, y_value - 1, maskUP_NEGATE)
+                }
+                auxThree.createPlane(scene, [30, high], 0x00ffff, [x1,0,-y1], [0,0,0]);
+            } else {
+                
+                //The coordinates corresponds with the node that is at the right of them.
+                if (x_value < height){
+                    auxJs.quit_direction(matrix, x_value, y_value, maskLEFT_NEGATE)  
+                }
+            
+                if (x_value > 0){
+                    auxJs.quit_direction(matrix, x_value - 1, y_value, maskRIGHT_NEGATE)  
+                }
+
+                auxThree.createPlane(scene, [30,high],0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
+            }
+        
+        };
     }
-    );
+    //Entry Point
+    auxThree.createPlane(scene, [30,30],0x00ff00, [-15,0,-15], [0,90,0]);
+    return matrix;
 }

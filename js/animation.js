@@ -1,7 +1,11 @@
-import {ninetyDeg, rotSpeed} from './auxiliary.js';
+import {ninetyDeg, rotSpeed} from './auxiliary-three.js';
 export {
     movs,
-    Animation
+    Animation,
+    maskUP_NEGATE,
+    maskDOWN_NEGATE,
+    maskRIGHT_NEGATE,
+    maskLEFT_NEGATE
 }
 
 const movs = {
@@ -14,22 +18,17 @@ const movs = {
     ROTR: 6,
 }
 
-// TODO: delete?
-const movsN = {
-    0: movs.NONE,
-    1: movs.UP,
-    2: movs.DOWN,
-    3: movs.LEFT,
-    4: movs.RIGHT,
-    5: movs.ROTL,
-    6: movs.ROTR,
-}
 
 // binary: 0bLRDU - Left, Right, Down, Up
 const maskUP    = 0b0001;
 const maskDOWN  = 0b0010;
 const maskRIGHT = 0b0100;
 const maskLEFT  = 0b1000;
+
+const maskUP_NEGATE   = 0b1110;
+const maskDOWN_NEGATE  = 0b1101;
+const maskRIGHT_NEGATE = 0b1011;
+const maskLEFT_NEGATE  = 0b0111;
 
 function getMask(mov){
     let res;
