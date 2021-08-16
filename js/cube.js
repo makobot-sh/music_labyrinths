@@ -1,15 +1,16 @@
 import * as aux from './auxiliary.js';
+import {movs,Animation} from './animation.js';
 
 // 0. Our Javascript will go here.
 // 1. Creating the scene
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, //FOV (in degrees)
+const camera = new THREE.PerspectiveCamera( 60, //FOV (in degrees)
     window.innerWidth / window.innerHeight, //Aspect ratio
     1, //Near clipping plane (objects nearer won't be rendered)
     700 ); //Far clipping plane (object further won't be rendered)
 
-camera.position.set( 0, 0, 0);
-//camera.lookAt( 30, 0, -5)
+camera.position.set( 0, 300, -100);
+camera.lookAt( 0, 0, -100)
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, //Size at which we render our app (width, height)
@@ -18,37 +19,47 @@ renderer.setSize( window.innerWidth, //Size at which we render our app (width, h
     //eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
 document.body.appendChild( renderer.domElement ); //<canvas> element our renderer uses to display the scene to us
 
-generate_maze();
-tween_animation();
+//2. Create the object we will move in place of the camera (for now)
+const geometry = new THREE.BoxGeometry(10,10,10); //Object that contains all the vertices (points) and faces (fill) of the cube
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //Three comes with various materials that take an object of properties to be applied to them. Here we only use color, in hexa.
+const cube = new THREE.Mesh( geometry, material ); //a Mesh takes a geometry and applies a material to it. Meshes can be inserted on our scene and moved around.
+cube.position.set( 0, 0, -15);
+scene.add( cube ); // by default, it is added at (0,0,0)
 
+generate_maze();
+//tween_animation(cube);
+var animCube = new Animation(cube);
+animCube.move(movs.UP,2000);
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
 // Note: this pauses when the user navigates to another browser tab!
 animate();
 
-function tween_animation(){
-    var tweenRot = new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed);
-    var tween1 = new TWEEN.Tween( camera.position ).to( {x:"+150",y:"+0",z:"0"}, 2000 ).onComplete(function(){
-        new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
+/* ============================================================== */
+
+function tween_animation(obj){
+    var tweenRot = new TWEEN.Tween( obj.rotation ).to( {y: '+'+aux.ninetyDeg} , aux.rotSpeed);
+    var tweenDer = new TWEEN.Tween( obj.position ).to( {x:"+30",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
+        tweenRot.start();
     });
     
-    var tween2 = new TWEEN.Tween( camera.position ).to( {x:"150",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
-        new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
+    var tweenUp = new TWEEN.Tween( obj.position ).to( {x:"+0",y:"+0",z:"-30"}, 2000 ).onComplete(function(){
+        tweenRot.start();
     });
     
-    var tween3 = new TWEEN.Tween( camera.position ).to( {x:"+0",y:"+0",z:"+1000"}, 20000 ).onComplete(function(){
-        new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
+    var tweenDown = new TWEEN.Tween( obj.position ).to( {x:"+0",y:"+0",z:"+30"}, 2000 ).onComplete(function(){
+        tweenRot.start();
     });
 
-    var tween4 = new TWEEN.Tween( camera.position ).to( {x:"+1500",y:"+0",z:"+0"}, 20000 ).onComplete(function(){
-        new TWEEN.Tween( camera.rotation ).to( {y: aux.ninetyDeg} , aux.rotSpeed).start();
+    var tweenLeft = new TWEEN.Tween( obj.position ).to( {x:"-30",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
+        tweenRot.start();
     });
-    tween1.chain(tween2);
-    tween2.chain(tween3);
-    tween3.chain(tween4);
-    tween4.chain(tween1);
-    //tween1.start()    
+    tweenDer.chain(tweenUp);
+    tweenUp.chain(tweenLeft);
+    tweenLeft.chain(tweenDown);
+    tweenDown.chain(tweenDer);
+    tweenDer.start()    
 };
 
 function animate() {
@@ -86,6 +97,8 @@ function generate_maze(){
                 }
             };
         }
+        //aux.createPlane(scene, [30,30],0x00ff00, [-15,0,-15], [0,90,0]);
     }
     );
+    //aux.createPlane(scene, [30,30],0x00ff00, [x1,0,-y1], [0,0,0]);
 }
