@@ -160,7 +160,7 @@ class Animation {
     }
 
     generateMovements(walls, times){
-        let pos = {"x" : 0, "y" : walls.length-1};
+        let pos = {"x" : 0, "y" : 0};
         let timer = 0;
         var movements = []
         let viewDir = new Movement(movs.UP);
@@ -214,10 +214,10 @@ class Animation {
                             pos.x += 1;
                             break;
                         case movs.UP:
-                            pos.y -= 1;
+                            pos.y += 1;
                             break;
                         case movs.DOWN:
-                            pos.y += 1;
+                            pos.y -= 1;
                             break;
                     }
 

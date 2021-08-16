@@ -20,6 +20,9 @@ renderer.setSize( window.innerWidth, //Size at which we render our app (width, h
     //eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
 document.body.appendChild( renderer.domElement ); //<canvas> element our renderer uses to display the scene to us
 
+// binary: 0bLRDU - Left, Right, Down, Up
+var matrix = await generate_maze();
+
 //2. Create the object we will move in place of the camera (for now)
 const geometry = new THREE.BoxGeometry(10,10,10); //Object that contains all the vertices (points) and faces (fill) of the cube
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //Three comes with various materials that take an object of properties to be applied to them. Here we only use color, in hexa.
@@ -27,24 +30,13 @@ const cube = new THREE.Mesh( geometry, material ); //a Mesh takes a geometry and
 cube.position.set( 0, 0, -15);
 scene.add( cube ); // by default, it is added at (0,0,0)
 
-var matrix = generate_maze();
-console.log(matrix)
-//tween_animation(cube);
-//var animCube = new Animation(cube);
-//animCube.move(movs.UP,2000).chain(animCube.move(movs.DOWN,2000)).start();
-
-let times = [1000,1500,2000,2500];
-// binary: 0bLRDU - Left, Right, Down, Up
-let walls = [
-    new Uint8Array([0b0110,0b1101,0b1000]),
-    new Uint8Array([0b0111,0b1100,0b1100]),
-    new Uint8Array([0b0001,0b0100,0b1100])
-];
+let times = [1000,1500,2000,2500,2700,3000,3500,4000];
 
 let animCube = new Animation(cube);
-let movements = animCube.generateMovements(walls, times);
+//let movements = animCube.generateMovements(walls, times);
+let movements = animCube.generateMovements(matrix, times);
 console.log(movements);
-animCube.animateSeries(movements);
+setTimeout(function(){animCube.animateSeries(movements);}, 2000);
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
@@ -79,7 +71,7 @@ async function generate_maze(){
     for (var key in json) {
         if (key == "Height"){
             var height = (json[key]+1)/high;
-            matrix = auxJs.inicialize_square_matrix(json[key], 0b1111);
+            matrix = auxJs.inicialize_square_matrix(height, 0b1111);
         }
         incrementador += 1; 
         if (incrementador > 2){
@@ -116,7 +108,8 @@ async function generate_maze(){
         
         };
     }
-    //Entry Point
+    //Wall off entry point
     auxThree.createPlane(scene, [30,30],0x00ff00, [-15,0,-15], [0,90,0]);
+    auxJs.quit_direction(matrix, 0, 0, maskLEFT_NEGATE)
     return matrix;
 }
