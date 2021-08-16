@@ -21,13 +21,18 @@ def get_svg_lines(data):
 def convert_lines_to_dictionary(data_set):
 	for i in range(0, len(lines_with_points)):
 		string = "Line" + str(i + 1)
-		data_set[string] = lines_with_points[i]
+		aux = {}
+		aux["x1"] = lines_with_points[i][0]
+		aux["x2"] = lines_with_points[i][1]
+		aux["y1"] = lines_with_points[i][2]
+		aux["y2"] = lines_with_points[i][3]
+		data_set[string] = aux
 	return data_set
 
 if __name__ == "__main__":
 	data = []
 	print("Reading SVG file...")
-	with open('./mazegenerator/src/maze.svg') as file:
+	with open('../mazegenerator/src/maze.svg') as file:
 		data = file.read()
 
 
