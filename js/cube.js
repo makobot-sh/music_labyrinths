@@ -36,14 +36,14 @@ console.log(matrix)
 let times = [1000,1100,1150,2000];
 // binary: 0bLRDU - Left, Right, Down, Up
 let walls = [
-    new Uint8Array([0b1001,0b0010,0b0111]),
-    new Uint8Array([0b1000,0b0011,0b0011]),
-    new Uint8Array([0b1110,0b1011,0b0011])
+    new Uint8Array([0b0110,0b1101,0b1000]),
+    new Uint8Array([0b0111,0b1100,0b1100]),
+    new Uint8Array([0b0001,0b0100,0b1100])
 ];
 
 let animCube = new Animation(cube);
 
-//console.log(animCube.generateMovements(walls, times));
+console.log(animCube.generateMovements(walls, times));
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*

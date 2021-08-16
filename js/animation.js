@@ -18,7 +18,6 @@ const movs = {
     ROTR: 6,
 }
 
-
 // binary: 0bLRDU - Left, Right, Down, Up
 const maskUP    = 0b0001;
 const maskDOWN  = 0b0010;
@@ -159,24 +158,25 @@ class Animation {
     }
 
     generateMovements(walls, times){
-        let pos = {"x" : walls.length-1, "y" : 0};
+        let pos = {"x" : 0, "y" : walls.length-1};
         let timer = 0;
         var movements = []
         let viewDir = new Movement(movs.UP);
         for ( let beat of times ) {
             let dirs = []
-            let currWalls = walls[pos.x][pos.y]
+            let currWalls = walls[pos.y][pos.x]
             if ( beat > timer ){
                 if ( beat-timer > rotSpeed ){
                     // If difference is bigger than rotSpeed, i have enough time 
                     // to rotate and go to next point, else i can only move
                     // in the direction i was to be able to hit this time
-                    if( currWalls & getMask(viewDir.left()) ){ dirs.push(viewDir.left()) };
-                    if( currWalls & getMask(viewDir.right()) ){ dirs.push(viewDir.right()) };    
+                    if( (currWalls & getMask(viewDir.left())) != 0){ dirs.push(viewDir.left()) };
+                    if( (currWalls & getMask(viewDir.right())) != 0){ dirs.push(viewDir.right()) };    
                 }
-                if ( currWalls & viewDir.mask() ){ dirs.push(viewDir.forward()) };
+                if ( (currWalls & viewDir.mask()) != 0){ dirs.push(viewDir.forward()) };
 
-                if ( currWalls == getMask(viewDir.behind()) && beat-timer > rotSpeed*2 ){
+                // Only turn around if there's no other direction to go
+                if ( (currWalls == getMask(viewDir.behind())) && (beat-timer > rotSpeed*2) ){
                     // Trapped, can only move behind
                     // Will only happen in this beat
                     dirs.push(viewDir.behind());
@@ -201,7 +201,7 @@ class Animation {
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : false});
                     }                    
                     movements.push({ "mov" : dir, "t" : movDuration, "beat" : dir == viewDir.forward()});
-                    timer = beat + movDuration;
+                    timer += movDuration;
 
                     switch (dir) {
                         case movs.LEFT:
