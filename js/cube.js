@@ -33,7 +33,7 @@ console.log(matrix)
 //var animCube = new Animation(cube);
 //animCube.move(movs.UP,2000).chain(animCube.move(movs.DOWN,2000)).start();
 
-let times = [1000,1100,1150,2000];
+let times = [1000,1500,2000,2500];
 // binary: 0bLRDU - Left, Right, Down, Up
 let walls = [
     new Uint8Array([0b0110,0b1101,0b1000]),
@@ -52,8 +52,6 @@ animCube.animateSeries(movements);
 animate();
 
 /* ============================================================== */
-
-
 
 function animate() {
     requestAnimationFrame( animate );

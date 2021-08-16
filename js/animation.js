@@ -122,6 +122,8 @@ class Movement {
         return res;
     }
 
+    set(mov){this.mov = mov;}
+
     mask(){ return getMask(this.mov); }
 }
 
@@ -199,9 +201,10 @@ class Animation {
                         movDuration -= rotSpeed*2;
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : true});
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : false});
-                    }                    
+                    }                
                     movements.push({ "mov" : dir, "t" : movDuration, "beat" : dir == viewDir.forward()});
                     timer += movDuration;
+                    viewDir.set(dir);
 
                     switch (dir) {
                         case movs.LEFT:
