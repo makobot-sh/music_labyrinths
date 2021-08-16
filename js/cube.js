@@ -28,8 +28,17 @@ scene.add( cube ); // by default, it is added at (0,0,0)
 
 generate_maze();
 //tween_animation(cube);
-var animCube = new Animation(cube);
-animCube.move(movs.UP,2000);
+//var animCube = new Animation(cube);
+//animCube.move(movs.UP,2000).chain(animCube.move(movs.DOWN,2000)).start();
+
+let times = [0,1000,2000,3000,3250,3500,3750,4000];
+let dirs = [
+    [3,3,3],
+    [1,4,4],
+    [1,4,4]
+];
+
+
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
@@ -39,20 +48,20 @@ animate();
 /* ============================================================== */
 
 function tween_animation(obj){
-    var tweenRot = new TWEEN.Tween( obj.rotation ).to( {y: '+'+aux.ninetyDeg} , aux.rotSpeed);
-    var tweenDer = new TWEEN.Tween( obj.position ).to( {x:"+30",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
+    let tweenRot = new TWEEN.Tween( obj.rotation ).to( {y: '+'+aux.ninetyDeg} , aux.rotSpeed);
+    let tweenDer = new TWEEN.Tween( obj.position ).to( {x:"+30",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
         tweenRot.start();
     });
     
-    var tweenUp = new TWEEN.Tween( obj.position ).to( {x:"+0",y:"+0",z:"-30"}, 2000 ).onComplete(function(){
+    let tweenUp = new TWEEN.Tween( obj.position ).to( {x:"+0",y:"+0",z:"-30"}, 2000 ).onComplete(function(){
         tweenRot.start();
     });
     
-    var tweenDown = new TWEEN.Tween( obj.position ).to( {x:"+0",y:"+0",z:"+30"}, 2000 ).onComplete(function(){
+    let tweenDown = new TWEEN.Tween( obj.position ).to( {x:"+0",y:"+0",z:"+30"}, 2000 ).onComplete(function(){
         tweenRot.start();
     });
 
-    var tweenLeft = new TWEEN.Tween( obj.position ).to( {x:"-30",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
+    let tweenLeft = new TWEEN.Tween( obj.position ).to( {x:"-30",y:"+0",z:"+0"}, 2000 ).onComplete(function(){
         tweenRot.start();
     });
     tweenDer.chain(tweenUp);

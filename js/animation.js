@@ -14,6 +14,16 @@ const movs = {
     ROTR: 6,
 }
 
+const movsN = {
+    0: movs.NONE,
+    1: movs.UP,
+    2: movs.DOWN,
+    3: movs.LEFT,
+    4: movs.RIGHT,
+    5: movs.ROTL,
+    6: movs.ROTR,
+}
+
 class Animation {
     constructor(obj){
         this.obj = obj;
@@ -42,6 +52,11 @@ class Animation {
                 tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '-'+ninetyDeg} , rotSpeed);
                 break;
         }
-        tween.start();
+        //tween.start();
+        return tween;
+    }
+
+    animateSeries(dirs, times){
+
     }
 }
