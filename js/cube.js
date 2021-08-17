@@ -9,26 +9,32 @@ const camera = new THREE.PerspectiveCamera( 60, //FOV (in degrees)
     window.innerWidth / window.innerHeight, //Aspect ratio
     1, //Near clipping plane (objects nearer won't be rendered)
     700 ); //Far clipping plane (object further won't be rendered)
-
-camera.position.set( 0, 300, -100);
-camera.lookAt( 0, 0, -100)
+var subject = camera;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, //Size at which we render our app (width, height)
-    window.innerHeight, 
-    true); //UpdateStyle (Ommitable): if set to false, size of app is same as canvas but is rendered at lower resolution
-    //eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
+window.innerHeight, 
+true); //UpdateStyle (Ommitable): if set to false, size of app is same as canvas but is rendered at lower resolution
+//eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
 document.body.appendChild( renderer.domElement ); //<canvas> element our renderer uses to display the scene to us
 
 // binary: 0bLRDU - Left, Right, Down, Up
 var matrix = await generate_maze();
 
-//2. Create the object we will move in place of the camera (for now)
+//2. Create the object we will move in place of the camera if on debug mode
 const geometry = new THREE.BoxGeometry(10,10,10); //Object that contains all the vertices (points) and faces (fill) of the cube
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //Three comes with various materials that take an object of properties to be applied to them. Here we only use color, in hexa.
 const cube = new THREE.Mesh( geometry, material ); //a Mesh takes a geometry and applies a material to it. Meshes can be inserted on our scene and moved around.
 cube.position.set( 0, 0, -15);
-scene.add( cube ); // by default, it is added at (0,0,0)
+
+if (auxThree.debugMode){
+    camera.position.set( 0, 300, -100);
+    camera.lookAt( 0, 0, -100)
+    subject = cube;
+    scene.add( cube ); // by default, it is added at (0,0,0)
+} else {
+    camera.position.set( 0, 0, -15);
+}
 
 //let times = [1000,1500,2000,2500,2700,3000,3500,4000];
 let times = [1000]
@@ -36,7 +42,7 @@ for(var i = 0; i < 400; i++){
     times.push(i*500);
 }
 
-let animCube = new Animation(cube);
+let animCube = new Animation(subject);
 //let movements = animCube.generateMovements(walls, times);
 let movements = animCube.generateMovements(matrix, times);
 console.log(movements);
@@ -67,7 +73,9 @@ animate();
 function animate() {
     requestAnimationFrame( animate );
     TWEEN.update();
-    camera.position.set( cube.position.x, 300, cube.position.z );
+    if(auxThree.debugMode){
+        camera.position.set( cube.position.x, 300, cube.position.z );
+    }
     //4. Animating movement
     // 1200 
     // move from (0,0,0) to (0,0,-50)

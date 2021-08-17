@@ -1,4 +1,4 @@
-import {ninetyDeg, rotSpeed, blinkSpeed} from './auxiliary-three.js';
+import {ninetyDeg, rotSpeed, blinkSpeed, debugMode} from './auxiliary-three.js';
 import {quit_direction} from './auxiliary-javascript.js';
 export {
     movs,
@@ -264,7 +264,7 @@ class Animation {
         for (let i = 1; i < movements.length; ++i) {
             let action = movements[i];
             let nextTween = this.move(movements[i].mov,movements[i].t);
-            if(action.beat){
+            if(action.beat && debugMode){
                 //make cube blink
                 let blinkTween = new TWEEN.Tween( this.obj.material.color ).to( {"r":1,"g":0,"b":0}, blinkSpeed).chain(new TWEEN.Tween( this.obj.material.color ).to( {"r":0,"g":1,"b":0}, blinkSpeed));
                 lastTween.chain(nextTween,blinkTween);
