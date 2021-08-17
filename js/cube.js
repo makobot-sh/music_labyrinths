@@ -37,10 +37,13 @@ if (auxThree.debugMode){
 }
 
 //let times = [1000,1500,2000,2500,2700,3000,3500,4000];
+/*
 let times = [1000]
 for(var i = 0; i < 400; i++){
     times.push(i*500);
 }
+*/
+var times = load_hitpoints()
 
 let animCube = new Animation(subject);
 //let movements = animCube.generateMovements(walls, times);
@@ -70,6 +73,17 @@ function animate() {
     renderer.render( scene, camera );
 }
 
+async function load_hitpoints(){
+    //Read the JSON file
+    var json = await auxJs.getJson("../beatmaps/928482_0.json")
+    var hitpoints = []
+
+    for (t of json['times']){
+        hitpoints.push(parseInt(t))
+    }
+
+    return hitpoints
+}
 
 async function generate_maze(){
   

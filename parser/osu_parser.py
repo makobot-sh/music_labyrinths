@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
 	print("Generating song .json...")
 	dataset = {"times":times}
-	jsonpath = os.path.join(extractionPath, osuFilename.replace(".osu",".json"))
+	jsonpath = os.path.join(extractionPath, "{}_{}.json".format(id,n1-1))
 	with open(jsonpath, 'w', encoding='utf-8') as f:
 		json.dump(dataset, f, ensure_ascii=False, indent=4)
 
