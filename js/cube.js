@@ -41,7 +41,7 @@ for(var i = 0; i < 400; i++){
 }
 */
 
-var file = "./beatmaps/928482/aaudio.mp3"
+var file = "./beatmaps/830701/audio.mp3"
 const listener = new THREE.AudioListener();
 camera.add( listener );
 
@@ -120,7 +120,7 @@ function animate() {
 
 async function load_hitpoints(){
     //Read the JSON file
-    var json = await auxJs.getJson("../beatmaps/928482/928482_2.json")
+    var json = await auxJs.getJson("../beatmaps/830701/830701_6.json")
     var hitpoints = []
 
     for (let t of json['times']){
