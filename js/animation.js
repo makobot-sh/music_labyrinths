@@ -160,12 +160,15 @@ class Animation {
         return tween;
     }
 
-    generateMovements(walls, times){
+    async generateMovements(walls, times){
         let pos = {"x" : 0, "y" : 0};
         let timer = 0;
         var movements = [];
         let viewDir = new Movement(movs.UP);
-        for ( let beat of times ) {
+
+        movements.push({ "mov" : movs.NONE, "t" : times[0], "beat" : true});
+        for (let i = 1; i < times.length; ++i) {
+            let beat = times[i];
             let dirs = [];
             let currWalls = walls[pos.y][pos.x];
             if ( beat > timer ){
@@ -240,9 +243,7 @@ class Animation {
                             pos.y -= 1;
                             break;
                     }
-
                 }
-
                 //If no movement was pushed, we skip this beat
                 continue;
             } else {
@@ -254,7 +255,7 @@ class Animation {
         return movements;
     }
 
-    animateSeries(movements){
+    async animateSeries(movements){
         // movements is an array of objects with the following properties:
         //    mov  : the type of movement (a value like those in the "movs" dict)
         //    t    : the duration of the movement
@@ -273,6 +274,6 @@ class Animation {
             }
             lastTween = nextTween;
         }
-        firstTween.start();
+        return firstTween;
     }
 }

@@ -43,28 +43,25 @@ for(var i = 0; i < 400; i++){
     times.push(i*500);
 }
 */
-var times = load_hitpoints()
 
-let animCube = new Animation(subject);
-//let movements = animCube.generateMovements(walls, times);
-let movements = animCube.generateMovements(matrix, times);
-console.log(movements);
-setTimeout(function(){animCube.animateSeries(movements);}, 2000);
-
-var file = "audio.mp3"
+var file = "./beatmaps/928482/aaudio.mp3"
 const listener = new THREE.AudioListener();
 camera.add( listener );
-
 
 const sound = new THREE.Audio( listener );
 const audioLoader = new THREE.AudioLoader();
 audioLoader.load( file, function( buffer ) {
 	sound.setBuffer( buffer );
 	sound.setLoop( true );
-	sound.setVolume( 0.5 );
-	sound.play();
+	sound.setVolume( 0.05 );
 });
 
+let animCube = new Animation(subject);
+let times = await load_hitpoints()
+let movements = await animCube.generateMovements(matrix, times);
+let startTween = await animCube.animateSeries(movements);
+startTween.start();
+sound.play();
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
@@ -86,15 +83,15 @@ function animate() {
     //plane.rotation.y += 0.01
     //camera.position.z -= 1
     renderer.render( scene, camera );
-    sound.pause();
+    //sound.pause();
 }
 
 async function load_hitpoints(){
     //Read the JSON file
-    var json = await auxJs.getJson("../beatmaps/928482_0.json")
+    var json = await auxJs.getJson("../beatmaps/928482/928482_2.json")
     var hitpoints = []
 
-    for (t of json['times']){
+    for (let t of json['times']){
         hitpoints.push(parseInt(t))
     }
 
