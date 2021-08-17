@@ -42,6 +42,21 @@ let movements = animCube.generateMovements(matrix, times);
 console.log(movements);
 setTimeout(function(){animCube.animateSeries(movements);}, 2000);
 
+var file = "audio.mp3"
+const listener = new THREE.AudioListener();
+camera.add( listener );
+
+
+const sound = new THREE.Audio( listener );
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load( file, function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.5 );
+	sound.play();
+});
+
+
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
 // Note: this pauses when the user navigates to another browser tab!
@@ -60,6 +75,7 @@ function animate() {
     //plane.rotation.y += 0.01
     //camera.position.z -= 1
     renderer.render( scene, camera );
+    sound.pause();
 }
 
 
