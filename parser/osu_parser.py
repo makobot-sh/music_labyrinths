@@ -1,5 +1,4 @@
 import json
-import re
 import zipfile
 import sys
 import os
@@ -14,11 +13,16 @@ if __name__ == "__main__":
 
 	print("Uncompressing OSU! beatmap...")
 	extractionPath = "../beatmaps/"+id
+
 	if (os.path.exists(extractionPath) and os.path.isdir(extractionPath)):
 		print("Beatmap with same id already uncompressed - skipping uncompression")
 	else:
-		with zipfile.ZipFile(filePath, 'r') as zip_ref:
-			zip_ref.extractall("../beatmaps/"+id)
+		try:
+			with zipfile.ZipFile(filePath, 'r') as zip_ref:
+				zip_ref.extractall("../beatmaps/"+id)
+		except Exception as e:
+			print("Failed to unzip with error: {}".format(e))
+			exit(1)
 
 	availableFiles = []
 	difficulties = []
