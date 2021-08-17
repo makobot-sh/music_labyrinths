@@ -18,9 +18,6 @@ true); //UpdateStyle (Ommitable): if set to false, size of app is same as canvas
 //eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
 document.body.appendChild( renderer.domElement ); //<canvas> element our renderer uses to display the scene to us
 
-// binary: 0bLRDU - Left, Right, Down, Up
-var matrix = await generate_maze();
-
 //2. Create the object we will move in place of the camera if on debug mode
 const geometry = new THREE.BoxGeometry(10,10,10); //Object that contains all the vertices (points) and faces (fill) of the cube
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //Three comes with various materials that take an object of properties to be applied to them. Here we only use color, in hexa.
@@ -49,26 +46,15 @@ const listener = new THREE.AudioListener();
 camera.add( listener );
 
 const sound = new THREE.Audio( listener );
-const audioLoader = new THREE.AudioLoader();
-audioLoader.load( file, function( buffer ) {
-	sound.setBuffer( buffer );
-	sound.setLoop( true );
-	sound.setVolume( 0.05 );
-},  function ( xhr ) {
-        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-    },
-    // onError callback
-    function ( err ) {
-        console.log( 'Un error ha ocurrido' );
-    }
-);
+let anim = new Animation(subject);
 
-let animCube = new Animation(subject);
-let times = await load_hitpoints()
-let movements = await animCube.generateMovements(matrix, times);
-let startTween = await animCube.animateSeries(movements);
-startTween.start();
-sound.play();
+const done = await Promise.all([loadAudio(),generateMazeAndMovement(anim)]);
+
+console.log("Starting all!")
+//startTween.start();
+//sound.play();
+done[0].play();
+done[1].start();
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
@@ -76,6 +62,45 @@ sound.play();
 animate();
 
 /* ============================================================== */
+
+async function loadAudio(){
+    const audioLoader = new THREE.AudioLoader();
+
+    let audioLoad = await new Promise(function(resolve, reject) {   // return a promise
+        audioLoader.load( file,
+            // onLoad callback
+            function( buffer ) {
+                //TODO: sound.preload?
+                sound.setBuffer( buffer );
+                sound.setLoop( true );
+                sound.setVolume( 0.1 );
+                resolve();
+            },  
+            // onProgress callback
+            function ( xhr ) {
+                console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+            },
+            // onError callback
+            function ( err ) {
+                console.log( 'Un error ha ocurrido' );
+                reject();
+            }
+        )
+    });
+    console.log("Finished audio load");
+    return sound;
+}
+
+async function generateMazeAndMovement(anim){
+    // binary: 0bLRDU - Left, Right, Down, Up
+    var matrix = await generate_maze();
+    let times = await load_hitpoints();
+    let movements = await anim.generateMovements(matrix, times);
+    let startTween = await anim.animateSeries(movements);
+    console.log("Finished animation load");
+    return startTween;
+}
+
 
 function animate() {
     requestAnimationFrame( animate );
