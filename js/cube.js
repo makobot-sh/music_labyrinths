@@ -54,7 +54,14 @@ audioLoader.load( file, function( buffer ) {
 	sound.setBuffer( buffer );
 	sound.setLoop( true );
 	sound.setVolume( 0.05 );
-});
+},  function ( xhr ) {
+        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+    },
+    // onError callback
+    function ( err ) {
+        console.log( 'Un error ha ocurrido' );
+    }
+);
 
 let animCube = new Animation(subject);
 let times = await load_hitpoints()
