@@ -82,7 +82,7 @@ async function loadAudio(){
             },
             // onError callback
             function ( err ) {
-                console.log( 'Un error ha ocurrido' );
+                console.log( 'Failed audio load' );
                 reject();
             }
         )
@@ -120,7 +120,7 @@ function animate() {
 
 async function load_hitpoints(){
     //Read the JSON file
-    var json = await auxJs.getJson("../beatmaps/830701/830701_6.json")
+    var json = await auxJs.getJson("./beatmaps/830701/830701_6.json")
     var hitpoints = []
 
     for (let t of json['times']){
@@ -133,7 +133,7 @@ async function load_hitpoints(){
 async function generate_maze(){
   
     //Read the JSON file
-    var json = await auxJs.getJson("../parser/data_lines.json")
+    var json = await auxJs.getJson("./parser/data_lines.json")
     var incrementador = 0;
     var high = 30;
     var matrix = []
