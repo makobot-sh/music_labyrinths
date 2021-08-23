@@ -11,7 +11,7 @@ export {
 var ninetyDeg = '1.5707963267948966';
 var rotSpeed = 250;
 var blinkSpeed = 125;
-var debugMode = true;
+var debugMode = false;
 
 function deg2rad(deg)
 {
