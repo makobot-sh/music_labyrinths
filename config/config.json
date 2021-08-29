@@ -10,9 +10,9 @@
         "Volume": 0.2,
         "Audio Path": "./beatmaps/830701/audio.mp3"
     },
-   
-    "Hitpoins": {
-        "Hitpoints JSON": "../beatmaps/830701/830701_6.json"
+    "Audio movement data": {
+        "Hitpoints JSON": "../beatmaps/830701/830701_times_Extra5.json",
+        "BPMs JSON": "../beatmaps/830701/830701_bpms_Extra5.json"
     },
     "Maze": {
         "Maze JSON": "../parser/data_lines.json"

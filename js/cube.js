@@ -77,7 +77,9 @@ async function loadAudio(audio_settings){
 async function generateMazeAndMovement(anim, config){
     // binary: 0bLRDU - Left, Right, Down, Up
     var matrix = await generate_maze(config["Maze"]);
-    let times = await load_hitpoints(config["Hitpoins"]);
+    //let times = await loadAudioData(config["Audio movement data"], "Hitpoints JSON");
+    let bpmsDict = await loadAudioData(config["Audio movement data"], "BPMs JSON");
+    let times = await anim.generateTimesFromBPM(bpmsDict);
     let movements = await anim.generateMovements(matrix, times);
     let startTween = await anim.animateSeries(movements);
 
@@ -97,16 +99,10 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-async function load_hitpoints(config){
+async function loadAudioData(audioConfig, key){
     //Read the JSON file
-    var json = await auxJs.getJson(config["Hitpoints JSON"])
-    var hitpoints = []
-
-    for (let t of json['times']){
-        hitpoints.push(parseInt(t))
-    }
-
-    return hitpoints
+    var data = await auxJs.getJson(audioConfig[key]);
+    return data;
 }
 
 async function generate_maze(config){

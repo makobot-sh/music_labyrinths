@@ -67,25 +67,24 @@ if __name__ == "__main__":
 					parseBPMS = False
 				else:
 					bpm = line.split(",")
-					bpmsSet.append("{{start:{}, beatLen:{}}}".format(bpm[0],bpm[1]))
+					bpmsSet.append({"start": int(bpm[0]), "beatLen": float(bpm[1])})
 			elif(parseHitObjects):
 				# parseHitObjects never goes back to false because the file ends 
 				# when hitpoints section ends
 				time = line.split(",")[2]
-				times.append(time)
+				times.append(int(time))
 			elif(line.strip() == "[TimingPoints]"):
 				parseBPMS = True
 			elif(line.strip() == "[HitObjects]"):
 				parseHitObjects = True
 	
 	#Include song's last hitpoint as a bpm with beatLen 0 in bpms json.
-	bpmsSet.append("{{start:{}, beatLen:{}}}".format(times[-1],0))
+	bpmsSet.append({"start": int(times[-1]), "beatLen": 0})
 
 	print("Generating song information .json files...")
-	dataset = {"times":times}
 	timesJsonPath = os.path.join(extractionPath, "{}_times_{}.json".format(id,difficulties[n1-1]))
 	with open(timesJsonPath, 'w', encoding='utf-8') as f:
-		json.dump(dataset, f, ensure_ascii=False, indent=4)
+		json.dump(times, f, ensure_ascii=False, indent=4)
 	
 	bpmJsonPath = os.path.join(extractionPath, "{}_bpms_{}.json".format(id,difficulties[n1-1]))
 	with open(bpmJsonPath, 'w', encoding='utf-8') as f:

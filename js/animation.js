@@ -160,9 +160,36 @@ class Animation {
         return tween;
     }
 
+    async generateTimesFromBPM(timingPointArr){
+        let timeCounter = timingPointArr[0]['start'];
+        let times = [];
+        let startBPMIdx = 0;
+        let nextBPMIdx = 1;
+        while(startBPMIdx < timingPointArr.length -1){
+            //Ignore relative bpm changes (because we don't understand them rn):
+            while(nextBPMIdx < timingPointArr.length && timingPointArr[nextBPMIdx]['beatLen'] < 0) { nextBPMIdx++; }
+            //The timingPointArr always ends with a timing point of beatLen 0 and start value of the last hitpoint available
+            //so nextBPMIdx will be a valid index of timingPointArr
+
+            let beatLen = timingPointArr[startBPMIdx]['beatLen'];
+            while( timeCounter + beatLen < timingPointArr[nextBPMIdx]['start']){
+                //If the time to push wouldn't be able to complete itself, we won't push it
+                times.push(timeCounter);
+                timeCounter += beatLen;
+            }
+            //We push the next start point directly, which might make the last beat in a bpm section a bit longer
+            //but we prefer this to a too short beat (might be dizzying)
+            times.push(timingPointArr[nextBPMIdx]['start']);
+            timeCounter = timingPointArr[nextBPMIdx]['start'];
+            startBPMIdx = nextBPMIdx;
+            nextBPMIdx = startBPMIdx+1;
+        }
+        return times;
+    }
+
     async generateMovements(walls, times){
         let pos = {"x" : 0, "y" : 0};
-        let timer = 0;
+        let timer = times[0];
         var movements = [];
         let viewDir = new Movement(movs.UP);
 
