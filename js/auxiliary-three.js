@@ -7,9 +7,28 @@ export {
   debugMode,
   deg2rad,
   rad2deg,
-  createPlane
+  createPlane,
+  create_cube,
+  Scene
 }
 
+class Scene {
+  constructor(settings){
+    var camera_settings = settings["Camera"]
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera( camera_settings["FOV"], //FOV (in degrees)
+                window.innerWidth / window.innerHeight, //Aspect ratio
+                camera_settings["Near clipping plane"], //Near clipping plane (objects nearer won't be rendered)
+                camera_settings["Far clipping plane"]); //Far clipping plane (object further won't be rendered)
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, //Size at which we render our app (width, height)
+                window.innerHeight, 
+                true); //UpdateStyle (Ommitable): if set to false, size of app is same as canvas but is rendered at lower resolution
+                //eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
+    document.body.appendChild(renderer.domElement); //<canvas> element our renderer uses to display the scene to us
+    this.renderer = renderer;
+  }
+};
 
 var ninetyDeg = '1.5707963267948966';
 var rotSpeed = 250;
@@ -27,6 +46,13 @@ function rad2deg(radians)
   var pi = Math.PI;
   return radians * (180/pi);
 };
+
+function create_cube(){
+  const geometry = new THREE.BoxGeometry(10,10,10); //Object that contains all the vertices (points) and faces (fill) of the cube
+  const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //Three comes with various materials that take an object of properties to be applied to them. Here we only use color, in hexa.
+  const cube = new THREE.Mesh(geometry, material);
+  return cube;
+}
 
 function createPlane(scene, dimentions, color, pos, deg)
 {
