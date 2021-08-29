@@ -1,12 +1,30 @@
 export {
+  config,
   quit_direction,
   inicialize_square_matrix,
   getJson
+  
 }
 
+var config = await getJson("../config/config.json");
+
+function printError(error, explicit) {
+  console.log(`[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}. This error probably occurs because JSON file has a syntax error or does not exist`);
+}
+
+
 async function getJson(path){
-  let response = await fetch(path);
-  let data = await response.json()
+  try {
+      let response = await fetch(path);
+      var data = await response.json()
+  } catch(err){
+    if (err instanceof SyntaxError) {
+      printError(err, true);
+    } else {
+      printError(err, false);
+    }
+  }
+  
   return data;
 }
 

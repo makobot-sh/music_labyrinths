@@ -2,53 +2,36 @@ import * as auxJs from './auxiliary-javascript.js';
 import * as auxThree from './auxiliary-three.js';
 import {movs,Animation, maskUP_NEGATE, maskDOWN_NEGATE, maskRIGHT_NEGATE, maskLEFT_NEGATE} from './animation.js';
 
-// 0. Our Javascript will go here.
-// 1. Creating the scene
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 60, //FOV (in degrees)
-    window.innerWidth / window.innerHeight, //Aspect ratio
-    1, //Near clipping plane (objects nearer won't be rendered)
-    700 ); //Far clipping plane (object further won't be rendered)
-var subject = camera;
+var audio_settings = auxJs.config["Sound"]
+var scene_obj = new auxThree.Scene(auxJs.config)
+var cube = auxThree.create_cube()
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, //Size at which we render our app (width, height)
-window.innerHeight, 
-true); //UpdateStyle (Ommitable): if set to false, size of app is same as canvas but is rendered at lower resolution
-//eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
-document.body.appendChild( renderer.domElement ); //<canvas> element our renderer uses to display the scene to us
+var renderer = scene_obj.renderer
+var camera = scene_obj.camera
+var scene = scene_obj.scene
 
-//2. Create the object we will move in place of the camera if on debug mode
-const geometry = new THREE.BoxGeometry(10,10,10); //Object that contains all the vertices (points) and faces (fill) of the cube
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //Three comes with various materials that take an object of properties to be applied to them. Here we only use color, in hexa.
-const cube = new THREE.Mesh( geometry, material ); //a Mesh takes a geometry and applies a material to it. Meshes can be inserted on our scene and moved around.
+var subject = camera
 cube.position.set( 0, 0, -15);
 
 if (auxThree.debugMode){
     camera.position.set( 0, 300, -100);
     camera.lookAt( 0, 0, -100)
     subject = cube;
-    scene.add( cube ); // by default, it is added at (0,0,0)
+    scene.add(cube); // by default, it is added at (0,0,0)
 } else {
     camera.position.set( 0, 0, -15);
 }
 
-//let times = [1000,1500,2000,2500,2700,3000,3500,4000];
-/*
-let times = [1000]
-for(var i = 0; i < 400; i++){
-    times.push(i*500);
-}
-*/
 
-var file = "./beatmaps/830701/audio.mp3"
+var audio_file = audio_settings["Audio Path"];
+
 const listener = new THREE.AudioListener();
 camera.add( listener );
 
 const sound = new THREE.Audio( listener );
 let anim = new Animation(subject);
 
-const done = await Promise.all([loadAudio(),generateMazeAndMovement(anim)]);
+const done = await Promise.all([loadAudio(audio_settings),generateMazeAndMovement(anim, auxJs.config)]);
 
 console.log("Starting all!")
 //startTween.start();
@@ -63,17 +46,17 @@ animate();
 
 /* ============================================================== */
 
-async function loadAudio(){
+async function loadAudio(audio_settings){
     const audioLoader = new THREE.AudioLoader();
 
     let audioLoad = await new Promise(function(resolve, reject) {   // return a promise
-        audioLoader.load( file,
+        audioLoader.load( audio_file,
             // onLoad callback
             function( buffer ) {
                 //TODO: sound.preload?
                 sound.setBuffer( buffer );
-                sound.setLoop( true );
-                sound.setVolume( 0.1 );
+                sound.setLoop( audio_settings["Loop"] );
+                sound.setVolume( audio_settings["Volume"] );
                 resolve();
             },  
             // onProgress callback
@@ -91,13 +74,17 @@ async function loadAudio(){
     return sound;
 }
 
-async function generateMazeAndMovement(anim){
+async function generateMazeAndMovement(anim, config){
     // binary: 0bLRDU - Left, Right, Down, Up
-    var matrix = await generate_maze();
-    let times = await load_hitpoints();
-    let movements = await anim.generateMovements(matrix, times);
+    var matrix = await generate_maze(config["Maze"]);
+    //let times = await loadAudioData(config["Audio movement data"], "Hitpoints JSON");
+    let bpmsDict = await loadAudioData(config["Audio movement data"], "BPMs JSON");
+    let timesAndRots = await anim.generateTimesFromBPM(bpmsDict);
+    let movements = await anim.generateMovements(matrix, timesAndRots['times'], timesAndRots['rotSpeeds']);
     let startTween = await anim.animateSeries(movements);
+
     console.log("Finished animation load");
+
     return startTween;
 }
 
@@ -108,32 +95,20 @@ function animate() {
     if(auxThree.debugMode){
         camera.position.set( cube.position.x, 300, cube.position.z );
     }
-    //4. Animating movement
-    // 1200 
-    // move from (0,0,0) to (0,0,-50)
-    //plane.rotation.x += 0.01
-    //plane.rotation.y += 0.01
-    //camera.position.z -= 1
-    renderer.render( scene, camera );
-    //sound.pause();
+
+    renderer.render(scene, camera);
 }
 
-async function load_hitpoints(){
+async function loadAudioData(audioConfig, key){
     //Read the JSON file
-    var json = await auxJs.getJson("./beatmaps/830701/830701_6.json")
-    var hitpoints = []
-
-    for (let t of json['times']){
-        hitpoints.push(parseInt(t))
-    }
-
-    return hitpoints
+    var data = await auxJs.getJson(audioConfig[key]);
+    return data;
 }
 
-async function generate_maze(){
+async function generate_maze(config){
   
     //Read the JSON file
-    var json = await auxJs.getJson("./parser/data_lines.json")
+    var json = await auxJs.getJson(config["Maze JSON"])
     var incrementador = 0;
     var high = 30;
     var matrix = []
@@ -175,7 +150,7 @@ async function generate_maze(){
                     auxJs.quit_direction(matrix, x_value - 1, y_value, maskRIGHT_NEGATE)  
                 }
 
-                auxThree.createPlane(scene, [30,high],0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
+                auxThree.createPlane(scene, [30,high], 0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
             }
         
         };

@@ -1,0 +1,25 @@
+{
+    "Camera": {
+        "FOV": 60,
+        "Near clipping plane": 1,
+        "Far clipping plane": 700
+    },
+    "Debug Mode": true,
+    "Sound": {
+        "Loop": false,
+        "Volume": 0.2,
+        "Audio Path": "./beatmaps/95487/Test - Metronome .mp3"
+    },
+    "Audio movement data": {
+        "Hitpoints JSON": "../beatmaps/95487/95487_times_200bpm.json",
+        "BPMs JSON": "../beatmaps/95487/95487_bpms_200bpm.json"
+    },
+    "Maze": {
+        "Maze JSON": "../parser/data_lines.json"
+    },
+    "Movements configs": {
+        "Rotation speed multiplier" : 0.33,
+        "Blink speed": 125,
+        "BPM multiplier": 2
+    } 
+}

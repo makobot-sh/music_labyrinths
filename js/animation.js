@@ -1,5 +1,5 @@
-import {ninetyDeg, rotSpeed, blinkSpeed, debugMode} from './auxiliary-three.js';
-import {quit_direction} from './auxiliary-javascript.js';
+import {ninetyDeg, debugMode} from './auxiliary-three.js';
+import {config, quit_direction} from './auxiliary-javascript.js';
 export {
     movs,
     Animation,
@@ -8,6 +8,10 @@ export {
     maskRIGHT_NEGATE,
     maskLEFT_NEGATE
 }
+
+const rotSpeedMult = config["Movements configs"]["Rotation speed multiplier"];
+const blinkSpeed = config["Movements configs"]["Blink speed"];
+const beatMultiplier = config["Movements configs"]["BPM multiplier"];
 
 const movs = {
     NONE: 0,
@@ -150,19 +154,49 @@ class Animation {
                 tween = new TWEEN.Tween( this.obj.position ).to( {x:"+30",y:"+0",z:"+0"}, time );
                 break;
             case movs.ROTL:
-                tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '+'+ninetyDeg} , rotSpeed);
+                tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '+'+ninetyDeg} , time);
                 break;
             case movs.ROTR:
-                tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '-'+ninetyDeg} , rotSpeed);
+                tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '-'+ninetyDeg} , time);
                 break;
         }
         //tween.start();
         return tween;
     }
 
-    async generateMovements(walls, times){
+    async generateTimesFromBPM(timingPointArr){
+        let timeCounter = timingPointArr[0]['start'];
+        let times = [];
+        let rotSpeeds = [];
+        let startBPMIdx = 0;
+        let nextBPMIdx = 1;
+        while(startBPMIdx < timingPointArr.length -1){
+            //Ignore relative bpm changes (because we don't understand them rn):
+            while(nextBPMIdx < timingPointArr.length && timingPointArr[nextBPMIdx]['beatLen'] < 0) { nextBPMIdx++; }
+            //The timingPointArr always ends with a timing point of beatLen 0 and start value of the last hitpoint available
+            //so nextBPMIdx will be a valid index of timingPointArr
+
+            let beatLen = timingPointArr[startBPMIdx]['beatLen'] * beatMultiplier;
+            while( timeCounter + beatLen < timingPointArr[nextBPMIdx]['start']){
+                //If the time to push wouldn't be able to complete itself, we won't push it
+                times.push(timeCounter);
+                rotSpeeds.push(beatLen * rotSpeedMult);
+                timeCounter += beatLen;
+            }
+            //We push the next start point directly, which might make the last beat in a bpm section a bit longer
+            //but we prefer this to a too short beat (might be dizzying)
+            times.push(timingPointArr[nextBPMIdx]['start']);
+            rotSpeeds.push(beatLen * rotSpeedMult);
+            timeCounter = timingPointArr[nextBPMIdx]['start'];
+            startBPMIdx = nextBPMIdx;
+            nextBPMIdx = startBPMIdx+1;
+        }
+        return {"times": times, "rotSpeeds": rotSpeeds};
+    }
+
+    async generateMovements(walls, times, rotSpeeds){
         let pos = {"x" : 0, "y" : 0};
-        let timer = 0;
+        let timer = times[0];
         var movements = [];
         let viewDir = new Movement(movs.UP);
 
@@ -171,6 +205,7 @@ class Animation {
             let beat = times[i];
             let dirs = [];
             let currWalls = walls[pos.y][pos.x];
+            let rotSpeed = rotSpeeds[i];
             if ( beat > timer ){
                 if ( beat-timer > rotSpeed ){
                     // If difference is bigger than rotSpeed, i have enough time 
