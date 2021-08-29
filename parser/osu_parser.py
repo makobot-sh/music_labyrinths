@@ -9,7 +9,7 @@ def detectDifficulty(filename):
 	return filename.split("[")[1].split("]")[0]
 
 if __name__ == "__main__":
-	id = os.path.basename(filePath)[0:6]
+	id = os.path.basename(filePath)[0:6].strip()
 
 	print("Uncompressing OSU! beatmap...")
 	extractionPath = "../beatmaps/"+id

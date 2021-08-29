@@ -8,11 +8,11 @@
     "Sound": {
         "Loop": true,
         "Volume": 0.2,
-        "Audio Path": "./beatmaps/830701/audio.mp3"
+        "Audio Path": "./beatmaps/95487/Test - Metronome .mp3"
     },
     "Audio movement data": {
-        "Hitpoints JSON": "../beatmaps/830701/830701_times_Extra5.json",
-        "BPMs JSON": "../beatmaps/830701/830701_bpms_Extra5.json"
+        "Hitpoints JSON": "../beatmaps/95487/95487_times_200bpm.json",
+        "BPMs JSON": "../beatmaps/95487/95487_bpms_200bpm.json"
     },
     "Maze": {
         "Maze JSON": "../parser/data_lines.json"
