@@ -79,8 +79,8 @@ async function generateMazeAndMovement(anim, config){
     var matrix = await generate_maze(config["Maze"]);
     //let times = await loadAudioData(config["Audio movement data"], "Hitpoints JSON");
     let bpmsDict = await loadAudioData(config["Audio movement data"], "BPMs JSON");
-    let times = await anim.generateTimesFromBPM(bpmsDict);
-    let movements = await anim.generateMovements(matrix, times);
+    let timesAndRots = await anim.generateTimesFromBPM(bpmsDict);
+    let movements = await anim.generateMovements(matrix, timesAndRots['times'], timesAndRots['rotSpeeds']);
     let startTween = await anim.animateSeries(movements);
 
     console.log("Finished animation load");

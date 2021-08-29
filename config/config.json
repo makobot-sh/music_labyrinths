@@ -6,7 +6,7 @@
     },
     "Debug Mode": true,
     "Sound": {
-        "Loop": true,
+        "Loop": false,
         "Volume": 0.2,
         "Audio Path": "./beatmaps/95487/Test - Metronome .mp3"
     },
@@ -16,7 +16,10 @@
     },
     "Maze": {
         "Maze JSON": "../parser/data_lines.json"
-    }
-   
-    
+    },
+    "Movements configs": {
+        "Rotation speed multiplier" : 0.33,
+        "Blink speed": 125,
+        "BPM multiplier": 2
+    } 
 }

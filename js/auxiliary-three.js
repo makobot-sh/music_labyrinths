@@ -2,8 +2,6 @@ import * as auxJs from './auxiliary-javascript.js';
 
 export {
   ninetyDeg,
-  rotSpeed,
-  blinkSpeed,
   debugMode,
   deg2rad,
   rad2deg,
@@ -31,8 +29,6 @@ class Scene {
 };
 
 var ninetyDeg = '1.5707963267948966';
-var rotSpeed = 250;
-var blinkSpeed = 125;
 var debugMode = auxJs.config["Debug Mode"];
 
 function deg2rad(deg)
