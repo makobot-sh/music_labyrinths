@@ -4,11 +4,16 @@ import {movs,Animation, maskUP_NEGATE, maskDOWN_NEGATE, maskRIGHT_NEGATE, maskLE
 
 // 0. Our Javascript will go here.
 // 1. Creating the scene
+
+
+var camera_settings = auxJs.config["Camera"]
+var audio_settings = auxJs.config["Sound"]
+
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 60, //FOV (in degrees)
+const camera = new THREE.PerspectiveCamera( camera_settings["FOV"], //FOV (in degrees)
     window.innerWidth / window.innerHeight, //Aspect ratio
-    1, //Near clipping plane (objects nearer won't be rendered)
-    700 ); //Far clipping plane (object further won't be rendered)
+    camera_settings["Near clipping plane"], //Near clipping plane (objects nearer won't be rendered)
+    camera_settings["Far clipping plane"]); //Far clipping plane (object further won't be rendered)
 var subject = camera;
 
 const renderer = new THREE.WebGLRenderer();
@@ -41,14 +46,15 @@ for(var i = 0; i < 400; i++){
 }
 */
 
-var file = "./beatmaps/830701/audio.mp3"
+var audio_file = audio_settings["Audio Path"];
+
 const listener = new THREE.AudioListener();
 camera.add( listener );
 
 const sound = new THREE.Audio( listener );
 let anim = new Animation(subject);
 
-const done = await Promise.all([loadAudio(),generateMazeAndMovement(anim)]);
+const done = await Promise.all([loadAudio(audio_settings),generateMazeAndMovement(anim, auxJs.config)]);
 
 console.log("Starting all!")
 //startTween.start();
@@ -63,17 +69,17 @@ animate();
 
 /* ============================================================== */
 
-async function loadAudio(){
+async function loadAudio(audio_settings){
     const audioLoader = new THREE.AudioLoader();
 
     let audioLoad = await new Promise(function(resolve, reject) {   // return a promise
-        audioLoader.load( file,
+        audioLoader.load( audio_file,
             // onLoad callback
             function( buffer ) {
                 //TODO: sound.preload?
                 sound.setBuffer( buffer );
-                sound.setLoop( true );
-                sound.setVolume( 0.1 );
+                sound.setLoop( audio_settings["Loop"] );
+                sound.setVolume( audio_settings["Volume"] );
                 resolve();
             },  
             // onProgress callback
@@ -91,10 +97,10 @@ async function loadAudio(){
     return sound;
 }
 
-async function generateMazeAndMovement(anim){
+async function generateMazeAndMovement(anim, config){
     // binary: 0bLRDU - Left, Right, Down, Up
-    var matrix = await generate_maze();
-    let times = await load_hitpoints();
+    var matrix = await generate_maze(config["Maze"]);
+    let times = await load_hitpoints(config["Hitpoins"]);
     let movements = await anim.generateMovements(matrix, times);
     let startTween = await anim.animateSeries(movements);
     console.log("Finished animation load");
@@ -118,9 +124,9 @@ function animate() {
     //sound.pause();
 }
 
-async function load_hitpoints(){
+async function load_hitpoints(config){
     //Read the JSON file
-    var json = await auxJs.getJson("../beatmaps/830701/830701_6.json")
+    var json = await auxJs.getJson(config["Hitpoints JSON"])
     var hitpoints = []
 
     for (let t of json['times']){
@@ -130,10 +136,10 @@ async function load_hitpoints(){
     return hitpoints
 }
 
-async function generate_maze(){
+async function generate_maze(config){
   
     //Read the JSON file
-    var json = await auxJs.getJson("../parser/data_lines.json")
+    var json = await auxJs.getJson(config["Maze JSON"])
     var incrementador = 0;
     var high = 30;
     var matrix = []
@@ -175,7 +181,7 @@ async function generate_maze(){
                     auxJs.quit_direction(matrix, x_value - 1, y_value, maskRIGHT_NEGATE)  
                 }
 
-                auxThree.createPlane(scene, [30,high],0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
+                auxThree.createPlane(scene, [30,high], 0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
             }
         
         };

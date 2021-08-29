@@ -1,8 +1,13 @@
 export {
+  config,
   quit_direction,
   inicialize_square_matrix,
   getJson
+  
 }
+
+var config = await getJson("../config/config.json");
+
 
 async function getJson(path){
   let response = await fetch(path);

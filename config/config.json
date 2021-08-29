@@ -1,0 +1,22 @@
+{
+    "Camera": {
+        "FOV": 60,
+        "Near clipping plane": 1,
+        "Far clipping plane": 700
+    },
+    "Debug Mode": true,
+    "Sound": {
+        "Loop": true,
+        "Volume": 0.2,
+        "Audio Path": "./beatmaps/830701/audio.mp3"
+    },
+   
+    "Hitpoins": {
+        "Hitpoints JSON": "../beatmaps/830701/830701_6.json"
+    },
+    "Maze": {
+        "Maze JSON": "../parser/data_lines.json"
+    }
+   
+    
+}
