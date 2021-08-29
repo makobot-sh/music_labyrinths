@@ -4,7 +4,7 @@
         "Near clipping plane": 1,
         "Far clipping plane": 700
     },
-    "Debug Mode": true,
+    "Debug Mode": false,
     "Sound": {
         "Loop": false,
         "Volume": 0.2,
