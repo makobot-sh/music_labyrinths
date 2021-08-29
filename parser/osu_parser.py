@@ -77,6 +77,9 @@ if __name__ == "__main__":
 				parseBPMS = True
 			elif(line.strip() == "[HitObjects]"):
 				parseHitObjects = True
+	
+	#Include song's last hitpoint as a bpm with beatLen 0 in bpms json.
+	bpmsSet.append("{{start:{}, beatLen:{}}}".format(times[-1],0))
 
 	print("Generating song information .json files...")
 	dataset = {"times":times}
