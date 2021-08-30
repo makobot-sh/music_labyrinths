@@ -36,7 +36,7 @@ const done = await Promise.all([loadAudio(audio_settings),generateMazeAndMovemen
 
 console.log("Starting all!")
 
-//done[0].play();
+done[0].play();
 done[1].start();
 var floorPlane = auxThree.createPlane(scene, [600, 600], 0xff00ff, [cube.position.x,-5,0], [90,0,0]);
 var roofPlane = auxThree.createPlane(scene, [800, 800], 0xAAAAAA, [cube.position.x,20,0], [90,0,0]);
