@@ -20,6 +20,7 @@ if (auxThree.debugMode){
     scene.add(cube); // by default, it is added at (0,0,0)
 } else {
     camera.position.set( 0, 0, -15);
+    scene.add(cube); 
 }
 
 
@@ -34,17 +35,18 @@ let anim = new Animation(subject);
 const done = await Promise.all([loadAudio(audio_settings),generateMazeAndMovement(anim, auxJs.config)]);
 
 console.log("Starting all!")
-//startTween.start();
-//sound.play();
-done[0].play();
-done[1].start();
 
+//done[0].play();
+done[1].start();
+var floorPlane = auxThree.createPlane(scene, [600, 600], 0xff00ff, [cube.position.x,-5,0], [90,0,0]);
+var roofPlane = auxThree.createPlane(scene, [800, 800], 0xAAAAAA, [cube.position.x,20,0], [90,0,0]);
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
 // Note: this pauses when the user navigates to another browser tab!
 animate();
 
 /* ============================================================== */
+
 
 async function loadAudio(audio_settings){
     const audioLoader = new THREE.AudioLoader();
@@ -92,9 +94,13 @@ async function generateMazeAndMovement(anim, config){
 function animate() {
     requestAnimationFrame( animate );
     TWEEN.update();
+    
     if(auxThree.debugMode){
         camera.position.set( cube.position.x, 300, cube.position.z );
     }
+
+    floorPlane.position.set(camera.position.x, -15, camera.position.z);
+    roofPlane.position.set(camera.position.x, 20, camera.position.z);
 
     renderer.render(scene, camera);
 }
@@ -150,11 +156,17 @@ async function generate_maze(config){
                     auxJs.quit_direction(matrix, x_value - 1, y_value, maskRIGHT_NEGATE)  
                 }
 
-                auxThree.createPlane(scene, [30,high], 0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
+                auxThree.createPlane(scene, [30, high], 0xffff00, [x2-15,0,-y2+15], [0,90,0]);    
             }
-        
+
+           
+              
         };
+
     }
+   
+   
+
     //Wall off entry point
     auxThree.createPlane(scene, [30,30],0x00ff00, [-15,0,-15], [0,90,0]);
     auxJs.quit_direction(matrix, 0, 0, maskLEFT_NEGATE)
