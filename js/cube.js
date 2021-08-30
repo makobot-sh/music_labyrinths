@@ -99,8 +99,8 @@ function animate() {
         camera.position.set( cube.position.x, 300, cube.position.z );
     }
 
-    floorPlane.position.set(camera.position.x, -15, camera.position.z);
-    roofPlane.position.set(camera.position.x, 20, camera.position.z);
+    floorPlane.position.set(subject.position.x, -15, subject.position.z);
+    roofPlane.position.set(subject.position.x, 20, subject.position.z);
 
     renderer.render(scene, camera);
 }

@@ -62,4 +62,5 @@ function createPlane(scene, dimentions, color, pos, deg)
   plane.rotation.y = deg2rad(deg[1]);
   plane.rotation.z = deg2rad(deg[2]);
   scene.add(plane);
+  return plane;
 };

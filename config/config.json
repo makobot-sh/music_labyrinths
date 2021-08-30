@@ -4,7 +4,7 @@
         "Near clipping plane": 1,
         "Far clipping plane": 700
     },
-    "Debug Mode": true,
+    "Debug Mode": false,
     "Sound": {
         "Loop": false,
         "Volume": 0.2,
@@ -18,8 +18,12 @@
         "Maze JSON": "../parser/data_lines.json"
     },
     "Movements configs": {
-        "Rotation speed multiplier" : 0.33,
+        "Rotation speed multiplier" : 0.25,
         "Blink speed": 125,
-        "BPM multiplier": 2
+        "BPM multiplier": 4,
+        "Jump ON": true,
+        "Jump speed up": 150,
+        "Jump speed down": 125,
+        "Jump height": 2
     } 
 }
