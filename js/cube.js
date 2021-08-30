@@ -49,7 +49,6 @@ console.log("Starting all!")
 if (audio_settings["Enable"]){
     done[0].play();
 }
-
 done[1].start();
 var texture2 = new THREE.TextureLoader().load('../textures/floor.jpg');
 texture2.wrapS = THREE.RepeatWrapping; 
@@ -114,10 +113,11 @@ function animate() {
     if(auxThree.debugMode){
         camera.position.set( cube.position.x, 300, cube.position.z );
     } else {
-        roofPlane.position.set(camera.position.x, 20, camera.position.z);
+        roofPlane.position.set(subject.position.x, 20, subject.position.z);
     }
 
-    floorPlane.position.set(camera.position.x, -15, camera.position.z);
+    floorPlane.position.set(subject.position.x, -15, subject.position.z);
+    
 
     renderer.render(scene, camera);
 }

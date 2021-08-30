@@ -23,8 +23,12 @@
         "Maze JSON": "../parser/data_lines.json"
     },
     "Movements configs": {
-        "Rotation speed multiplier" : 0.33,
+        "Rotation speed multiplier" : 0.25,
         "Blink speed": 125,
-        "BPM multiplier": 2
+        "BPM multiplier": 4,
+        "Jump ON": true,
+        "Jump speed up": 150,
+        "Jump speed down": 125,
+        "Jump height": 2
     } 
 }
