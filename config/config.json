@@ -2,10 +2,15 @@
     "Camera": {
         "FOV": 60,
         "Near clipping plane": 1,
-        "Far clipping plane": 700
+        "Far clipping plane": 500
     },
     "Debug Mode": true,
+    "Textures": {
+        "Enable": true,
+        "Texture Pack": "./config/resource_pack/texture_pack_1.json"
+    },
     "Sound": {
+        "Enable": false,
         "Loop": false,
         "Volume": 0.2,
         "Audio Path": "./beatmaps/95487/Test - Metronome .mp3"

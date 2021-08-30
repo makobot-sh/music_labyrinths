@@ -8,8 +8,8 @@ export {
 
 var config = await getJson("../config/config.json");
 
-function printError(error, explicit) {
-  console.log(`[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}. This error probably occurs because JSON file has a syntax error or does not exist`);
+function printError(error, path, explicit) {
+  console.log(`[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}, JSON Path: ${path}. This error probably occurs because JSON file has a syntax error or does not exist`);
 }
 
 
@@ -19,9 +19,9 @@ async function getJson(path){
       var data = await response.json()
   } catch(err){
     if (err instanceof SyntaxError) {
-      printError(err, true);
+      printError(err, path, true);
     } else {
-      printError(err, false);
+      printError(err, path, false);
     }
   }
   
