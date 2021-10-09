@@ -1,8 +1,11 @@
 import * as auxJs from './auxiliary-javascript.js';
 import * as auxThree from './auxiliary-three.js';
 import {movs,Animation, maskUP_NEGATE, maskDOWN_NEGATE, maskRIGHT_NEGATE, maskLEFT_NEGATE} from './animation.js';
+export {
+    loadAudio2
+}
 
-var audio_settings = auxJs.config["Sound"];
+let audio_settings = auxJs.config["Sound"];
 
 
 
@@ -34,16 +37,17 @@ if (auxThree.debugMode){
     var roofPlane = auxThree.createPlane(scene, [800, 800], [cube.position.x,20,0], [90,0,0], "Roof Plane", 0xAAAAAA);
 }
 
-
-var audio_file = audio_settings["Audio Path"];
-
 const listener = new THREE.AudioListener();
 camera.add( listener );
 
 const sound = new THREE.Audio( listener );
+
 let anim = new Animation(subject);
 
-const done = await Promise.all([loadAudio(audio_settings),generateMazeAndMovement(anim, auxJs.config)]);
+
+
+
+const done = await Promise.all([loadAudio(audio_settings, sound),generateMazeAndMovement(anim, auxJs.config)]);
 
 console.log("Starting all!")
 if (audio_settings["Enable"]){
@@ -63,11 +67,41 @@ animate();
 /* ============================================================== */
 
 
-async function loadAudio(audio_settings){
+async function loadAudio(audio_settings, sound_object){
+    
     const audioLoader = new THREE.AudioLoader();
 
     let audioLoad = await new Promise(function(resolve, reject) {   // return a promise
-        audioLoader.load( audio_file,
+        audioLoader.load( audio_settings["Audio Path"],
+            // onLoad callback
+            function( buffer ) {
+                //TODO: sound.preload?
+                sound_object.setBuffer( buffer );
+                sound_object.setLoop( audio_settings["Loop"] );
+                sound_object.setVolume( audio_settings["Volume"] );
+                resolve();
+            },  
+            // onProgress callback
+            function ( xhr ) {
+                console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+            },
+            // onError callback
+            function ( err ) {
+                console.log( 'Failed audio load' );
+                reject();
+            }
+        )
+    });
+    console.log("Finished audio load");
+    return sound;
+}
+
+async function loadAudio2(audio_settings){
+    
+    const audioLoader = new THREE.AudioLoader();
+
+    let audioLoad = await new Promise(function(resolve, reject) {   // return a promise
+        audioLoader.load( audio_settings["Audio Path"],
             // onLoad callback
             function( buffer ) {
                 //TODO: sound.preload?
@@ -88,7 +122,7 @@ async function loadAudio(audio_settings){
         )
     });
     console.log("Finished audio load");
-    return sound;
+    return sound2;
 }
 
 async function generateMazeAndMovement(anim, config){
