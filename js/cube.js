@@ -78,14 +78,16 @@ var floorPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,-5,0],
 
 
 let p = document.getElementById("audioButton"); // Encuentra el elemento "p" en el sitio
-var flag = true;
+var audioOnButtonFlag = true;
 p.onclick = function(){
-    if (flag){
+    if (audioOnButtonFlag){
         done[0].setVolume(0);
-        flag = false;
+        audioOnButtonFlag = false;
+        document.getElementById("audioButton").textContent = "Audio: disabled";
     } else {
         done[0].setVolume(audio_settings["Volume"]);
-        flag = true;
+        audioOnButtonFlag = true;
+        document.getElementById("audioButton").textContent = "Audio: enabled";
     }
 }
 
