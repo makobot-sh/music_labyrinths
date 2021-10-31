@@ -4,7 +4,7 @@
         "Near clipping plane": 1,
         "Far clipping plane": 500
     },
-    "Debug Mode": true,
+    "Debug Mode": false,
     "Audio test":{
         "Enable": true,
         "Audio test path": "./Sounds/beep.mp3",
@@ -28,7 +28,7 @@
         "Maze JSON": "../parser/data_lines.json"
     },
     "Movements configs": {
-        "BPM movement" : false,
+        "BPM movement" : true,
         "Rotation speed multiplier" : 0.25,
         "Min movement duration" : 150,
         "Blink speed": 125,
