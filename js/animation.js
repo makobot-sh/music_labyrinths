@@ -177,6 +177,7 @@ class Animation {
         let rotSpeeds = [];
         let startBPMIdx = 0;
         let nextBPMIdx = 1;
+        let lastBPM = timingPointArr[startBPMIdx];
         while(startBPMIdx < timingPointArr.length -1){
             //Ignore relative bpm changes (because we don't understand them rn):
             while(nextBPMIdx < timingPointArr.length && timingPointArr[nextBPMIdx]['beatLen'] < 0) { nextBPMIdx++; }
@@ -188,7 +189,7 @@ class Animation {
             while( timeCounter + beatLen < timingPointArr[nextBPMIdx]['start']){
                 //If the time to push wouldn't be able to complete itself, we won't push it
                 times.push(timeCounter);
-                rotSpeeds.push(beatLen * beatMultiplier * rotSpeedMult);
+                rotSpeeds.push(beatLen * rotSpeedMult);
                 timeCounter += beatLen;
             }
             //We push the next start point directly, which might make the last beat in a bpm section a bit longer
