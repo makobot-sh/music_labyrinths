@@ -5,15 +5,20 @@
         "Far clipping plane": 500
     },
     "Debug Mode": true,
+    "Audio test":{
+        "Enable": true,
+        "Audio test path": "./beatmaps/95487/Test - Metronome .mp3",
+        "Volume": 2
+    },
     "Textures": {
         "Enable": true,
         "Texture Pack": "./config/resource_pack/texture_pack_1.json"
     },
     "Sound": {
-        "Enable": false,
+        "Enable": true,
         "Loop": false,
-        "Volume": 0.2,
-        "Audio Path": "./beatmaps/95487/Test - Metronome .mp3"
+        "Volume": 0.1,
+        "Audio Path": "./beatmaps/928482/aaudio.mp3"
     },
     "Audio movement data": {
         "Hitpoints JSON": "../beatmaps/95487/95487_times_200bpm.json",

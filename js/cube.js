@@ -1,9 +1,7 @@
 import * as auxJs from './auxiliary-javascript.js';
 import * as auxThree from './auxiliary-three.js';
 import {movs,Animation, maskUP_NEGATE, maskDOWN_NEGATE, maskRIGHT_NEGATE, maskLEFT_NEGATE} from './animation.js';
-export {
-    loadAudio2
-}
+
 
 let audio_settings = auxJs.config["Sound"];
 
@@ -19,7 +17,8 @@ var scene = scene_obj.scene;
 var subject = camera;
 cube.position.set( 0, 0, -15);
 
-
+const listener = new THREE.AudioListener();
+camera.add( listener );
 
 
 // how many times to repeat in each direction; the default is (1,1),
@@ -29,16 +28,26 @@ cube.position.set( 0, 0, -15);
 if (auxThree.debugMode){
     camera.position.set( 0, 300, -100);
     camera.lookAt( 0, 0, -100)
+    if (audio_settings["Enable"]){
+        let audio_settings = auxJs.config["Audio test"];
+        const sound = new THREE.PositionalAudio( listener );
+        var cubeSound = auxThree.create_cube();
+        loadPositionalAudio(audio_settings, sound)
+        cubeSound.position.set(0, 320, -100);
+        cubeSound.add(sound)
+        scene.add(cubeSound);
+    }
     subject = cube;
     scene.add(cube); // by default, it is added at (0,0,0)
+    
+    
 } else {
     camera.position.set( 0, 0, -15);
     scene.add(cube); 
     var roofPlane = auxThree.createPlane(scene, [800, 800], [cube.position.x,20,0], [90,0,0], "Roof Plane", 0xAAAAAA);
 }
 
-const listener = new THREE.AudioListener();
-camera.add( listener );
+
 
 const sound = new THREE.Audio( listener );
 
@@ -66,6 +75,35 @@ animate();
 
 /* ============================================================== */
 
+
+async function loadPositionalAudio(audio_settings, sound_object){
+    
+    const audioLoader = new THREE.AudioLoader();
+
+
+        audioLoader.load( audio_settings["Audio test path"],
+            // onLoad callback
+            function( buffer ) {
+                sound_object.setBuffer( buffer );
+                sound_object.setRefDistance(100);
+                sound_object.setVolume( audio_settings["Volume"] );
+                sound_object.play();
+           
+            },  
+            // onProgress callback
+            function ( xhr ) {
+                console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+            },
+            // onError callback
+            function ( err ) {
+                console.log( 'Failed positional audio load' );
+        
+            }
+        )
+
+    console.log("Finished positional audio load");
+    return sound;
+}
 
 async function loadAudio(audio_settings, sound_object){
     
@@ -96,34 +134,6 @@ async function loadAudio(audio_settings, sound_object){
     return sound;
 }
 
-async function loadAudio2(audio_settings){
-    
-    const audioLoader = new THREE.AudioLoader();
-
-    let audioLoad = await new Promise(function(resolve, reject) {   // return a promise
-        audioLoader.load( audio_settings["Audio Path"],
-            // onLoad callback
-            function( buffer ) {
-                //TODO: sound.preload?
-                sound.setBuffer( buffer );
-                sound.setLoop( audio_settings["Loop"] );
-                sound.setVolume( audio_settings["Volume"] );
-                resolve();
-            },  
-            // onProgress callback
-            function ( xhr ) {
-                console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-            },
-            // onError callback
-            function ( err ) {
-                console.log( 'Failed audio load' );
-                reject();
-            }
-        )
-    });
-    console.log("Finished audio load");
-    return sound2;
-}
 
 async function generateMazeAndMovement(anim, config){
     // binary: 0bLRDU - Left, Right, Down, Up
