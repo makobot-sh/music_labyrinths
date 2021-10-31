@@ -18,7 +18,7 @@
         "Enable": true,
         "Loop": false,
         "Volume": 0.05,
-        "Audio Path": "./beatmaps/928482/aaudio.mp3"
+        "Audio Path": "./beatmaps/928482/928482_audio_Hard.mp3"
     },
     "Audio movement data": {
         "Hitpoints JSON": "../beatmaps/928482/928482_times_Hard.json",
