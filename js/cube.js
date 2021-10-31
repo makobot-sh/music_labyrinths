@@ -5,13 +5,6 @@ export {positional_sound}
 
 
 
-
-
-
-let audio_settings = auxJs.config["Sound"];
-
-
-
 var scene_obj = new auxThree.Scene(auxJs.config);
 var cube = auxThree.create_cube();
 
@@ -20,23 +13,24 @@ var camera = scene_obj.camera;
 var scene = scene_obj.scene;
 
 var subject = camera;
+
 cube.position.set( 0, 0, -15);
 
+let audio_settings = auxJs.config["Sound"];
 const listener = new THREE.AudioListener();
 camera.add( listener );
-
+let audio_test_settings = auxJs.config["Audio test"];
 
 // how many times to repeat in each direction; the default is (1,1),
 //   which is probably why your example wasn't working
 //texture.repeat.set( 400, 400 ); 
-let audio_test_settings = auxJs.config["Audio test"];
+
 if (audio_test_settings["Enable"]){
         
     var positional_sound = new THREE.PositionalAudio( listener );
     var cubeSound = auxThree.create_cube();
     cubeSound.material.transparent = true;
     loadPositionalAudio(audio_test_settings, positional_sound)
-    cubeSound.position.set(0, 0, 0);
     cubeSound.add(positional_sound)
     scene.add(cubeSound);
 }
@@ -114,8 +108,6 @@ async function loadPositionalAudio(audio_settings, sound_object){
                 sound_object.setBuffer( buffer );
                 sound_object.setRefDistance(100);
                 sound_object.setVolume( audio_settings["Volume"] );
-                //sound_object.play();
-           
             },  
             // onProgress callback
             function ( xhr ) {

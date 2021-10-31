@@ -2,6 +2,7 @@ import json
 import zipfile
 import sys
 import os
+import shutil
 
 def detectDifficulty(filename):
 	return filename.split("[")[1].split("]")[0]
@@ -24,15 +25,16 @@ if __name__ == "__main__":
 	print("Uncompressing OSU! beatmap...")
 	extractionPath = "../beatmaps/"+id
 
-	if (os.path.exists(extractionPath) and os.path.isdir(extractionPath)):
+	'''if (os.path.exists(extractionPath) and os.path.isdir(extractionPath)):
 		print("Beatmap with same id already uncompressed - skipping uncompression")
 	else:
-		try:
-			with zipfile.ZipFile(filePath, 'r') as zip_ref:
-				zip_ref.extractall("../beatmaps/"+id)
-		except Exception as e:
-			print("Failed to unzip with error: {}".format(e))
-			exit(1)
+	'''
+	try:
+		with zipfile.ZipFile(filePath, 'r') as zip_ref:
+			zip_ref.extractall("../beatmaps/"+id)
+	except Exception as e:
+		print("Failed to unzip with error: {}".format(e))
+		exit(1)
 
 	availableFiles = []
 	difficulties = []
@@ -66,11 +68,14 @@ if __name__ == "__main__":
 	
 	bpmsSet = []
 	times = []
+	audioFilename = ''
 	with open(osuFilePath) as file:
 		lines = file.readlines()
 		parseBPMS = False
 		parseHitObjects = False
 		for line in lines:
+			if (line.strip().startswith("AudioFilename")):
+				audioFilename = line.split(': ', 1)[1].strip()
 			if(parseBPMS):
 				if(line.strip() == ""):
 					# timingPoints section ended, go back to not parsing BPMs state
@@ -100,4 +105,16 @@ if __name__ == "__main__":
 	with open(bpmJsonPath, 'w', encoding='utf-8') as f:
 		json.dump(bpmsSet, f, ensure_ascii=False, indent=4)
 
+<<<<<<< HEAD
+=======
+	audioExt = audioFilename.split(".")[-1]
+	audioFilePath = os.path.join(extractionPath, audioFilename)
+	copyFilePath = os.path.join(extractionPath, "{}_audio_{}.{}".format(id,difficulties[n1-1], audioExt))
+	shutil.copyfile(audioFilePath, copyFilePath)
+	
+	for file in os.listdir(extractionPath): 
+		if not file.startswith("{}_".format(id)):
+			os.remove(os.path.join(extractionPath,file))
+
+>>>>>>> d5caef5dc08f4c14d9e512d589d9c9ab5578330b
 	print("Done!")
