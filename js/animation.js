@@ -8,6 +8,7 @@ export {
     maskRIGHT_NEGATE,
     maskLEFT_NEGATE
 }
+import {positional_sound} from './cube.js';
 
 const rotSpeedMult = config["Movements configs"]["Rotation speed multiplier"];
 const blinkSpeed = config["Movements configs"]["Blink speed"];
@@ -16,6 +17,7 @@ const jumpOn = config["Movements configs"]["Jump ON"];
 const jumpSpeedUp = config["Movements configs"]["Jump speed up"];
 const jumpSpeedDown = config["Movements configs"]["Jump speed down"];
 const jumpHeight = config["Movements configs"]["Jump height"];
+const audioTestOn = config["Audio test"]["Enable"];
 
 const movs = {
     NONE: 0,
@@ -309,7 +311,13 @@ class Animation {
                 if(debugMode){
                     //make cube blink
                     let blinkTween = new TWEEN.Tween( this.obj.material.color ).to( {"r":1,"g":0,"b":0}, blinkSpeed).chain(new TWEEN.Tween( this.obj.material.color ).to( {"r":0,"g":1,"b":0}, blinkSpeed));
-                    tweens.push(blinkTween)
+                    if(audioTestOn){
+                        blinkTween.onStart( function() { 
+                            //TOMI SONAR SONIDO ACA
+                            positional_sound.play();
+                        } );
+                    }
+                    tweens.push(blinkTween);
                 }
                 if(jumpOn){
                     let jumpTweenUp   = new TWEEN.Tween( this.obj.position       ).to( {y:"-"+jumpHeight}, jumpSpeedUp);
@@ -317,7 +325,7 @@ class Animation {
                     let jumpTweenDown = new TWEEN.Tween( this.obj.position       ).to( {y:"+"+jumpHeight}, jumpSpeedDown);
                     //jumpTweenDown.easing(TWEEN.Easing.Cubic.Out);
                     jumpTweenUp.chain(jumpTweenDown);
-                    tweens.push(jumpTweenUp)
+                    tweens.push(jumpTweenUp);
                 }
             }
             if(tweens.length==3){lastTween.chain(tweens[0],tweens[1],tweens[2]);};

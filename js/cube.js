@@ -1,6 +1,7 @@
 import * as auxJs from './auxiliary-javascript.js';
 import * as auxThree from './auxiliary-three.js';
 import {movs,Animation, maskUP_NEGATE, maskDOWN_NEGATE, maskRIGHT_NEGATE, maskLEFT_NEGATE} from './animation.js';
+export {positional_sound}
 
 
 let audio_settings = auxJs.config["Sound"];
@@ -24,17 +25,17 @@ camera.add( listener );
 // how many times to repeat in each direction; the default is (1,1),
 //   which is probably why your example wasn't working
 //texture.repeat.set( 400, 400 ); 
-
+let audio_test_settings = auxJs.config["Audio test"];
 if (auxThree.debugMode){
     camera.position.set( 0, 300, -100);
     camera.lookAt( 0, 0, -100)
-    if (audio_settings["Enable"]){
-        let audio_settings = auxJs.config["Audio test"];
-        const sound = new THREE.PositionalAudio( listener );
+    if (audio_test_settings["Enable"]){
+        
+        var positional_sound = new THREE.PositionalAudio( listener );
         var cubeSound = auxThree.create_cube();
-        loadPositionalAudio(audio_settings, sound)
+        loadPositionalAudio(audio_test_settings, positional_sound)
         cubeSound.position.set(0, 320, -100);
-        cubeSound.add(sound)
+        cubeSound.add(positional_sound)
         scene.add(cubeSound);
     }
     subject = cube;

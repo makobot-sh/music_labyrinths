@@ -7,17 +7,17 @@
     "Debug Mode": true,
     "Audio test":{
         "Enable": true,
-        "Audio test path": "./beatmaps/95487/Test - Metronome .mp3",
-        "Volume": 2
+        "Audio test path": "./Sounds/beep.mp3",
+        "Volume": 10
     },
     "Textures": {
         "Enable": true,
         "Texture Pack": "./config/resource_pack/texture_pack_1.json"
     },
     "Sound": {
-        "Enable": true,
+        "Enable": false,
         "Loop": false,
-        "Volume": 0.1,
+        "Volume": 0.05,
         "Audio Path": "./beatmaps/928482/aaudio.mp3"
     },
     "Audio movement data": {
