@@ -28,7 +28,7 @@ class Scene {
                     window.innerHeight, 
                     true); //UpdateStyle (Ommitable): if set to false, size of app is same as canvas but is rendered at lower resolution
                     //eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
-        document.body.appendChild(renderer.domElement); //<canvas> element our renderer uses to display the scene to us
+        document.getElementById("player").appendChild(renderer.domElement); //<canvas> element our renderer uses to display the scene to us        
         this.renderer = renderer;
 
     }

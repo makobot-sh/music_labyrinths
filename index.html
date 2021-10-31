@@ -3,15 +3,17 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Musical labyrinth</title>
-		<style>
-			body { margin: 0; }
-		</style>
+		<link href="index.css" rel="stylesheet" />
 	</head>
 	<body>
 		<audio id="audio" preload="auto" style="display: none">
-			<source src="audio.mp3" type="audio/ogg">
+			<source src="audio.mp3" type="audio/ogg"> </audio>
 		<script src="js/three.js"></script>
 		<script src="js/tween.umd.js"></script>
 		<script type="module" src="js/cube.js"></script>
+		<div id="container">
+			<div id="player"></div>
+			<div id="counter">0</div>
+		</div>
 	</body>
 </html>
