@@ -40,18 +40,6 @@ class TextureManager {
         if (this.textureEnable){
             this.texturePackPaths = texture_config;
             this.texturePack = {};
-            /*
-            var texturePackPaths = await getJson(settings["Texture Pack"]);
-            var texturePack = {}
-            for(id in texturePackPaths){
-                var path = texturePackPaths["id"];
-                if(path["Enable"]){
-                    var texture = createTexture(path["Path"]);
-                    texturePack[id] = texture;
-                }
-            }
-            this.texturePack = texturePack;
-            */
         }
     }
 
