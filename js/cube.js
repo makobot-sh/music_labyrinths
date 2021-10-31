@@ -114,7 +114,7 @@ async function loadPositionalAudio(audio_settings, sound_object){
                 sound_object.setBuffer( buffer );
                 sound_object.setRefDistance(100);
                 sound_object.setVolume( audio_settings["Volume"] );
-                sound_object.play();
+                //sound_object.play();
            
             },  
             // onProgress callback
@@ -165,12 +165,16 @@ async function loadAudio(audio_settings, sound_object){
 async function generateMazeAndMovement(anim, config){
     // binary: 0bLRDU - Left, Right, Down, Up
     var matrix = await generate_maze(config["Maze"]);
-    //let times = await loadAudioData(config["Audio movement data"], "Hitpoints JSON");
     let bpmsDict = await loadAudioData(config["Audio movement data"], "BPMs JSON");
     let timesAndRots = await anim.generateTimesFromBPM(bpmsDict);
-    let movements = await anim.generateMovements(matrix, timesAndRots['times'], timesAndRots['rotSpeeds']);
+    let movements;
+    if(config["Movements configs"]["BPM Movement"]){
+        movements = await anim.generateMovements(matrix, timesAndRots['times'], timesAndRots['rotSpeeds']);
+    } else {
+        let times = await loadAudioData(config["Audio movement data"], "Hitpoints JSON");
+        movements = await anim.generateMovements(matrix, times, [timesAndRots['rotSpeeds'][0]]);
+    }
     let startTween = await anim.animateSeries(movements);
-
     console.log("Finished animation load");
 
     return startTween;

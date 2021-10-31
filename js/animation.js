@@ -206,13 +206,17 @@ class Animation {
         let timer = times[0];
         var movements = [];
         let viewDir = new Movement(movs.UP);
+        let rotSpeed = rotSpeeds[0];
 
         movements.push({ "mov" : movs.NONE, "t" : times[0], "beat" : true});
         for (let i = 1; i < times.length; ++i) {
             let beat = times[i];
             let dirs = [];
             let currWalls = walls[pos.y][pos.x];
-            let rotSpeed = rotSpeeds[i];
+            if(rotSpeeds.length>1){
+                rotSpeed = rotSpeeds[i];
+            }
+
             if ( beat > timer ){
                 if ( beat-timer >= rotSpeed ){
                     // If difference is bigger than rotSpeed, i have enough time 

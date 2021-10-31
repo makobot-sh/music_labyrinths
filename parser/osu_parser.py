@@ -3,12 +3,22 @@ import zipfile
 import sys
 import os
 
-filePath = sys.argv[1]
-
 def detectDifficulty(filename):
 	return filename.split("[")[1].split("]")[0]
 
 if __name__ == "__main__":
+	if(len(sys.argv) < 2):
+		print("Error! Missing arguments")
+		print("Usage: python3 osu_parser.py <.osz file path>")
+		exit(1)
+
+	filePath = sys.argv[1]
+
+	if(not os.path.isfile(filePath)):
+		print("Error! Invalid path or file")
+		print("Usage: python3 osu_parser.py <.osz file path>")
+		exit(1)
+
 	id = os.path.basename(filePath)[0:6].strip()
 
 	print("Uncompressing OSU! beatmap...")
