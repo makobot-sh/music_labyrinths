@@ -26,18 +26,20 @@ camera.add( listener );
 //   which is probably why your example wasn't working
 //texture.repeat.set( 400, 400 ); 
 let audio_test_settings = auxJs.config["Audio test"];
+if (audio_test_settings["Enable"]){
+        
+    var positional_sound = new THREE.PositionalAudio( listener );
+    var cubeSound = auxThree.create_cube();
+    cubeSound.material.transparent = true;
+    loadPositionalAudio(audio_test_settings, positional_sound)
+    cubeSound.position.set(0, 0, 0);
+    cubeSound.add(positional_sound)
+    scene.add(cubeSound);
+}
 if (auxThree.debugMode){
     camera.position.set( 0, 300, -100);
     camera.lookAt( 0, 0, -100)
-    if (audio_test_settings["Enable"]){
-        
-        var positional_sound = new THREE.PositionalAudio( listener );
-        var cubeSound = auxThree.create_cube();
-        loadPositionalAudio(audio_test_settings, positional_sound)
-        cubeSound.position.set(0, 320, -100);
-        cubeSound.add(positional_sound)
-        scene.add(cubeSound);
-    }
+   
     subject = cube;
     scene.add(cube); // by default, it is added at (0,0,0)
     
@@ -103,7 +105,7 @@ async function loadPositionalAudio(audio_settings, sound_object){
         )
 
     console.log("Finished positional audio load");
-    return sound;
+    return sound_object;
 }
 
 async function loadAudio(audio_settings, sound_object){
@@ -161,7 +163,9 @@ function animate() {
     } else {
         roofPlane.position.set(subject.position.x, 20, subject.position.z);
     }
-
+    if (audio_test_settings["Enable"]){
+        cubeSound.position.set(camera.position.x, camera.position.y + 20, camera.position.z);
+    }
     floorPlane.position.set(subject.position.x, -15, subject.position.z);
     
 

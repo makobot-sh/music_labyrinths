@@ -308,15 +308,14 @@ class Animation {
             let nextTween = this.move(movements[i].mov,movements[i].t);
             let tweens = [nextTween]
             if(action.beat){
+                if(audioTestOn){
+                    nextTween.onStart( function() { 
+                        positional_sound.play();
+                    } );
+                }
                 if(debugMode){
                     //make cube blink
                     let blinkTween = new TWEEN.Tween( this.obj.material.color ).to( {"r":1,"g":0,"b":0}, blinkSpeed).chain(new TWEEN.Tween( this.obj.material.color ).to( {"r":0,"g":1,"b":0}, blinkSpeed));
-                    if(audioTestOn){
-                        blinkTween.onStart( function() { 
-                            //TOMI SONAR SONIDO ACA
-                            positional_sound.play();
-                        } );
-                    }
                     tweens.push(blinkTween);
                 }
                 if(jumpOn){
