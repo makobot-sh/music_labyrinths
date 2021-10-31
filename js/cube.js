@@ -4,6 +4,10 @@ import {movs,Animation, maskUP_NEGATE, maskDOWN_NEGATE, maskRIGHT_NEGATE, maskLE
 export {positional_sound}
 
 
+
+
+
+
 let audio_settings = auxJs.config["Sound"];
 
 
@@ -70,6 +74,24 @@ var texture2 = new THREE.TextureLoader().load('../textures/floor.jpg');
 texture2.wrapS = THREE.RepeatWrapping; 
 texture2.wrapT = THREE.RepeatWrapping;
 var floorPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,-5,0], [90,0,0], "Floor Plane", 0x888888);
+
+
+
+let p = document.getElementById("audioButton"); // Encuentra el elemento "p" en el sitio
+var flag = true;
+p.onclick = function(){
+    if (flag){
+        done[0].setVolume(0);
+        flag = false;
+    } else {
+        done[0].setVolume(audio_settings["Volume"]);
+        flag = true;
+    }
+}
+
+
+
+
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
