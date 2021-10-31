@@ -197,6 +197,7 @@ class Animation {
             startBPMIdx = nextBPMIdx;
             nextBPMIdx = startBPMIdx+1;
         }
+        console.log(times);
         return {"times": times, "rotSpeeds": rotSpeeds};
     }
 
@@ -213,7 +214,7 @@ class Animation {
             let currWalls = walls[pos.y][pos.x];
             let rotSpeed = rotSpeeds[i];
             if ( beat > timer ){
-                if ( beat-timer > rotSpeed ){
+                if ( beat-timer >= rotSpeed ){
                     // If difference is bigger than rotSpeed, i have enough time 
                     // to rotate and go to next point, else i can only move
                     // in the direction i was to be able to hit this time
@@ -223,50 +224,34 @@ class Animation {
                 if ( (currWalls & viewDir.mask()) != 0){ dirs.push(viewDir.forward()) };
 
                 // Only turn around if there's no other direction to go
-                if ( (currWalls == getMask(viewDir.behind())) && (beat-timer > rotSpeed*2) ){
+                if ( (currWalls == getMask(viewDir.behind())) && (beat-timer >= rotSpeed*2) ){
                     // Trapped, can only move behind
                     // Will only happen in this beat
                     dirs.push(viewDir.behind());
                     // Don't come back to this spot (we wall it off)
-                    switch (viewDir.behind()){
-                        case movs.UP:
-                            quit_direction(walls,   pos.x,   pos.y, maskUP_NEGATE);
-                            quit_direction(walls,   pos.x, pos.y+1, maskDOWN_NEGATE);
-                            break;
-                        case movs.DOWN:
-                            quit_direction(walls,   pos.x,   pos.y, maskDOWN_NEGATE);
-                            quit_direction(walls,   pos.x, pos.y-1, maskUP_NEGATE);
-                            break;
-                        case movs.LEFT:
-                            quit_direction(walls,   pos.x,   pos.y, maskLEFT_NEGATE);
-                            quit_direction(walls, pos.x-1,   pos.y, maskRIGHT_NEGATE);
-                            break;
-                        case movs.RIGHT:
-                            quit_direction(walls,   pos.x,   pos.y, maskRIGHT_NEGATE);
-                            quit_direction(walls, pos.x+1,   pos.y, maskLEFT_NEGATE);
-                            break;
-                    }
+                    this.blockOffDeadEnd(viewDir, walls, pos);
                 }
-                
+
                 if( dirs.length > 0 ){
                     let dir = dirs.sample();
                     let movDuration = beat - timer;
+                    let forwardDuration = movDuration;
 
                     if(dir == viewDir.left()) {
                         // need to rotate once
-                        movDuration -= rotSpeed; //take out rotation duration from foward movement duration 
+                        forwardDuration -= rotSpeed; //take out rotation duration from foward movement duration 
                         movements.push({ "mov" : movs.ROTL, "t" : rotSpeed, "beat" : true});
                     } else if (dir == viewDir.right()) {
                         // need to rotate once
-                        movDuration -= rotSpeed;
+                        forwardDuration -= rotSpeed;
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : true});
                     } else if (dir == viewDir.behind()) {
                         // need to rotate twice
-                        movDuration -= rotSpeed*2;
+                        forwardDuration -= rotSpeed*2;
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : true});
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : false});
                     }                
-                    movements.push({ "mov" : dir, "t" : movDuration, "beat" : dir == viewDir.forward()});
+                    movements.push({ "mov" : dir, "t" : forwardDuration, "beat" : dir == viewDir.forward()});
                     timer += movDuration;
                     viewDir.set(dir);
 
@@ -285,6 +270,7 @@ class Animation {
                             break;
                     }
                 }
+                
                 //If no movement was pushed, we skip this beat
                 continue;
             } else {
@@ -294,6 +280,27 @@ class Animation {
             }
         }
         return movements;
+    }
+
+    blockOffDeadEnd(viewDir, walls, pos) {
+        switch (viewDir.behind()) {
+            case movs.UP:
+                quit_direction(walls, pos.x, pos.y, maskUP_NEGATE);
+                quit_direction(walls, pos.x, pos.y + 1, maskDOWN_NEGATE);
+                break;
+            case movs.DOWN:
+                quit_direction(walls, pos.x, pos.y, maskDOWN_NEGATE);
+                quit_direction(walls, pos.x, pos.y - 1, maskUP_NEGATE);
+                break;
+            case movs.LEFT:
+                quit_direction(walls, pos.x, pos.y, maskLEFT_NEGATE);
+                quit_direction(walls, pos.x - 1, pos.y, maskRIGHT_NEGATE);
+                break;
+            case movs.RIGHT:
+                quit_direction(walls, pos.x, pos.y, maskRIGHT_NEGATE);
+                quit_direction(walls, pos.x + 1, pos.y, maskLEFT_NEGATE);
+                break;
+        }
     }
 
     async animateSeries(movements){

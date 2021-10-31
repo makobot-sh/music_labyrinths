@@ -6,7 +6,16 @@ body {
 #container {
     display: flex;
     flex-direction: reverse-row;
-    align-items: left;
+    align-self: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
+#player {
+    display: flex;
+    position: absolute;
+    z-index: 1;
     width: 100%;
     height: 100%;
 }
@@ -14,23 +23,18 @@ body {
 #debugMenu {
     display: flex;
     flex-direction: column;
-    width: 20%;
-}
-
-#player {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
     height: 100%;
+    z-index: 99;
+    margin-left: 85%;
+    width: 15%;
+    color:white;
 }
 
 .debugOpt {
-    z-index: 99;
     margin-left: 1.5%;
     align-self: flex-start;
 }
 
 #counter {
     font-size: 60px;
-    color:white;
 }
