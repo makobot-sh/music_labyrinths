@@ -1,0 +1,14 @@
+{
+    "Floor Plane":{
+        "Enable": false,
+        "Path": ""
+    },
+    "Roof Plane":{
+        "Enable": false,
+        "Path": ""
+    },
+    "Wall Plane":{
+        "Enable": true,
+        "Path": "./textures/wall_image.png"
+    }
+}
