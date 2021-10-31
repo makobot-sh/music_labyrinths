@@ -15,23 +15,25 @@
         "Texture Pack": "./config/resource_pack/texture_pack_1.json"
     },
     "Sound": {
-        "Enable": false,
+        "Enable": true,
         "Loop": false,
         "Volume": 0.05,
         "Audio Path": "./beatmaps/928482/aaudio.mp3"
     },
     "Audio movement data": {
-        "Hitpoints JSON": "../beatmaps/95487/95487_times_200bpm.json",
-        "BPMs JSON": "../beatmaps/95487/95487_bpms_200bpm.json"
+        "Hitpoints JSON": "../beatmaps/928482/928482_times_Hard.json",
+        "BPMs JSON": "../beatmaps/928482/928482_bpms_Hard.json"
     },
     "Maze": {
         "Maze JSON": "../parser/data_lines.json"
     },
     "Movements configs": {
+        "BPM movement" : false,
         "Rotation speed multiplier" : 0.25,
+        "Min movement duration" : 150,
         "Blink speed": 125,
         "BPM multiplier": 4,
-        "Jump ON": true,
+        "Jump ON": false,
         "Jump speed up": 150,
         "Jump speed down": 125,
         "Jump height": 2

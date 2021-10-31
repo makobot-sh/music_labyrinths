@@ -18,6 +18,7 @@ const jumpSpeedUp = config["Movements configs"]["Jump speed up"];
 const jumpSpeedDown = config["Movements configs"]["Jump speed down"];
 const jumpHeight = config["Movements configs"]["Jump height"];
 const audioTestOn = config["Audio test"]["Enable"];
+const minMovLen = config["Movements configs"]["Min movement duration"];
 
 const movs = {
     NONE: 0,
@@ -182,11 +183,12 @@ class Animation {
             //The timingPointArr always ends with a timing point of beatLen 0 and start value of the last hitpoint available
             //so nextBPMIdx will be a valid index of timingPointArr
 
-            let beatLen = timingPointArr[startBPMIdx]['beatLen'] * beatMultiplier;
+            let beatLen = timingPointArr[startBPMIdx]['beatLen'];
+            while( beatLen < minMovLen ){ beatLen *= 2; }
             while( timeCounter + beatLen < timingPointArr[nextBPMIdx]['start']){
                 //If the time to push wouldn't be able to complete itself, we won't push it
                 times.push(timeCounter);
-                rotSpeeds.push(beatLen * rotSpeedMult);
+                rotSpeeds.push(beatLen * beatMultiplier * rotSpeedMult);
                 timeCounter += beatLen;
             }
             //We push the next start point directly, which might make the last beat in a bpm section a bit longer
@@ -217,8 +219,9 @@ class Animation {
                 rotSpeed = rotSpeeds[i];
             }
 
-            if ( beat > timer ){
-                if ( beat-timer >= rotSpeed ){
+            let movDuration = beat - timer;
+            if ( movDuration > minMovLen ){
+                if ( movDuration >= minMovLen+rotSpeed ){
                     // If difference is bigger than rotSpeed, i have enough time 
                     // to rotate and go to next point, else i can only move
                     // in the direction i was to be able to hit this time
@@ -228,7 +231,7 @@ class Animation {
                 if ( (currWalls & viewDir.mask()) != 0){ dirs.push(viewDir.forward()) };
 
                 // Only turn around if there's no other direction to go
-                if ( (currWalls == getMask(viewDir.behind())) && (beat-timer >= rotSpeed*2) ){
+                if ( (currWalls == getMask(viewDir.behind())) && (movDuration >= minMovLen+rotSpeed*2) ){
                     // Trapped, can only move behind
                     // Will only happen in this beat
                     dirs.push(viewDir.behind());
@@ -238,7 +241,6 @@ class Animation {
 
                 if( dirs.length > 0 ){
                     let dir = dirs.sample();
-                    let movDuration = beat - timer;
                     let forwardDuration = movDuration;
 
                     if(dir == viewDir.left()) {
