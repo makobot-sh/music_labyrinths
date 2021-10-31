@@ -4,23 +4,33 @@ body {
 }
 
 #container {
-    position: relative;
+    display: flex;
+    flex-direction: reverse-row;
+    align-items: left;
     width: 100%;
     height: 100%;
-    display: block;
+}
+
+#debugMenu {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
 }
 
 #player {
     position: absolute;
     z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.debugOpt {
+    z-index: 99;
+    margin-left: 1.5%;
+    align-self: flex-start;
 }
 
 #counter {
-    position: absolute;
-    z-index: 99;
     font-size: 60px;
-    width: 100%;
-    margin-left: 1.5%;
-    text-align: left; 
     color:white;
 }
