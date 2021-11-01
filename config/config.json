@@ -6,7 +6,7 @@
     },
     "Debug Mode": false,
     "Audio test":{
-        "Enable": true,
+        "Enable": false,
         "Audio test path": "./Sounds/beep.mp3",
         "Volume": 10
     },
@@ -29,8 +29,8 @@
     },
     "Movements configs": {
         "BPM movement" : true,
-        "Rotation speed multiplier" : 0.25,
-        "Min movement duration" : 150,
+        "Rotation speed multiplier" : 0.5,
+        "Min movement duration" : 200,
         "Blink speed": 125,
         "BPM multiplier": 4,
         "Jump ON": false,
