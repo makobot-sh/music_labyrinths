@@ -21,8 +21,8 @@
         "Audio Path": "./beatmaps/928482/928482_audio_Hard.mp3"
     },
     "Audio movement data": {
-        "Hitpoints JSON": "../beatmaps/928482/928482_times_Hard.json",
-        "BPMs JSON": "../beatmaps/928482/928482_bpms_Hard.json"
+        "Hitpoints JSON": "./beatmaps/928482/928482_times_Hard.json",
+        "BPMs JSON": "./beatmaps/928482/928482_bpms_Hard.json"
     },
     "Maze": {
         "Maze JSON": "./parser/data_lines.json"
