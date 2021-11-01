@@ -105,16 +105,4 @@ if __name__ == "__main__":
 	with open(bpmJsonPath, 'w', encoding='utf-8') as f:
 		json.dump(bpmsSet, f, ensure_ascii=False, indent=4)
 
-<<<<<<< HEAD
-=======
-	audioExt = audioFilename.split(".")[-1]
-	audioFilePath = os.path.join(extractionPath, audioFilename)
-	copyFilePath = os.path.join(extractionPath, "{}_audio_{}.{}".format(id,difficulties[n1-1], audioExt))
-	shutil.copyfile(audioFilePath, copyFilePath)
-	
-	for file in os.listdir(extractionPath): 
-		if not file.startswith("{}_".format(id)):
-			os.remove(os.path.join(extractionPath,file))
-
->>>>>>> d5caef5dc08f4c14d9e512d589d9c9ab5578330b
 	print("Done!")
