@@ -1,0 +1,40 @@
+body {
+    overflow: hidden;
+    margin: 0;
+}
+
+#container {
+    display: flex;
+    flex-direction: reverse-row;
+    align-self: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
+#player {
+    display: flex;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+
+#debugMenu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    z-index: 99;
+    margin-left: 85%;
+    width: 15%;
+    color:white;
+}
+
+.debugOpt {
+    margin-left: 1.5%;
+    align-self:center;
+}
+
+#counter {
+    font-size: 60px;
+}

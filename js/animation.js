@@ -1,5 +1,5 @@
-import {ninetyDeg, rotSpeed, blinkSpeed, debugMode} from './auxiliary-three.js';
-import {quit_direction} from './auxiliary-javascript.js';
+import {ninetyDeg, debugMode} from './auxiliary-three.js';
+import {config, quit_direction} from './auxiliary-javascript.js';
 export {
     movs,
     Animation,
@@ -8,6 +8,17 @@ export {
     maskRIGHT_NEGATE,
     maskLEFT_NEGATE
 }
+import {positional_sound} from './cube.js';
+
+const rotSpeedMult = config["Movements configs"]["Rotation speed multiplier"];
+const blinkSpeed = config["Movements configs"]["Blink speed"];
+const beatMultiplier = config["Movements configs"]["BPM multiplier"];
+const jumpOn = config["Movements configs"]["Jump ON"];
+const jumpSpeedUp = config["Movements configs"]["Jump speed up"];
+const jumpSpeedDown = config["Movements configs"]["Jump speed down"];
+const jumpHeight = config["Movements configs"]["Jump height"];
+const audioTestOn = config["Audio test"]["Enable"];
+const minMovLen = config["Movements configs"]["Min movement duration"];
 
 const movs = {
     NONE: 0,
@@ -150,29 +161,68 @@ class Animation {
                 tween = new TWEEN.Tween( this.obj.position ).to( {x:"+30",y:"+0",z:"+0"}, time );
                 break;
             case movs.ROTL:
-                tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '+'+ninetyDeg} , rotSpeed);
+                tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '+'+ninetyDeg} , time);
                 break;
             case movs.ROTR:
-                tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '-'+ninetyDeg} , rotSpeed);
+                tween = new TWEEN.Tween( this.obj.rotation ).to( {y: '-'+ninetyDeg} , time);
                 break;
         }
         //tween.start();
         return tween;
     }
 
-    async generateMovements(walls, times){
+    async generateTimesFromBPM(timingPointArr){
+        let timeCounter = timingPointArr[0]['start'];
+        let times = [];
+        let rotSpeeds = [];
+        let startBPMIdx = 0;
+        let nextBPMIdx = 1;
+        let lastBPM = timingPointArr[startBPMIdx];
+        while(startBPMIdx < timingPointArr.length -1){
+            //Ignore relative bpm changes (because we don't understand them rn):
+            while(nextBPMIdx < timingPointArr.length && timingPointArr[nextBPMIdx]['beatLen'] < 0) { nextBPMIdx++; }
+            //The timingPointArr always ends with a timing point of beatLen 0 and start value of the last hitpoint available
+            //so nextBPMIdx will be a valid index of timingPointArr
+
+            let beatLen = timingPointArr[startBPMIdx]['beatLen'];
+            while( beatLen < minMovLen ){ beatLen *= 2; }
+            while( timeCounter + beatLen < timingPointArr[nextBPMIdx]['start']){
+                //If the time to push wouldn't be able to complete itself, we won't push it
+                times.push(timeCounter);
+                rotSpeeds.push(beatLen * rotSpeedMult);
+                timeCounter += beatLen;
+            }
+            //We push the next start point directly, which might make the last beat in a bpm section a bit longer
+            //but we prefer this to a too short beat (might be dizzying)
+            times.push(timingPointArr[nextBPMIdx]['start']);
+            rotSpeeds.push(beatLen * rotSpeedMult);
+            timeCounter = timingPointArr[nextBPMIdx]['start'];
+            startBPMIdx = nextBPMIdx;
+            nextBPMIdx = startBPMIdx+1;
+        }
+        console.log(times);
+        return {"times": times, "rotSpeeds": rotSpeeds};
+    }
+
+    async generateMovements(walls, times, rotSpeeds){
         let pos = {"x" : 0, "y" : 0};
-        let timer = 0;
+        let timer = times[0];
         var movements = [];
         let viewDir = new Movement(movs.UP);
+        let rotSpeed = rotSpeeds[0];
 
         movements.push({ "mov" : movs.NONE, "t" : times[0], "beat" : true});
         for (let i = 1; i < times.length; ++i) {
             let beat = times[i];
             let dirs = [];
             let currWalls = walls[pos.y][pos.x];
-            if ( beat > timer ){
-                if ( beat-timer > rotSpeed ){
+            if(rotSpeeds.length>1){
+                rotSpeed = rotSpeeds[i];
+            }
+
+            let movDuration = beat - timer;
+            if ( movDuration > minMovLen ){
+                if ( movDuration >= minMovLen+rotSpeed ){
                     // If difference is bigger than rotSpeed, i have enough time 
                     // to rotate and go to next point, else i can only move
                     // in the direction i was to be able to hit this time
@@ -182,50 +232,33 @@ class Animation {
                 if ( (currWalls & viewDir.mask()) != 0){ dirs.push(viewDir.forward()) };
 
                 // Only turn around if there's no other direction to go
-                if ( (currWalls == getMask(viewDir.behind())) && (beat-timer > rotSpeed*2) ){
+                if ( (currWalls == getMask(viewDir.behind())) && (movDuration >= minMovLen+rotSpeed*2) ){
                     // Trapped, can only move behind
                     // Will only happen in this beat
                     dirs.push(viewDir.behind());
                     // Don't come back to this spot (we wall it off)
-                    switch (viewDir.behind()){
-                        case movs.UP:
-                            quit_direction(walls,   pos.x,   pos.y, maskUP_NEGATE);
-                            quit_direction(walls,   pos.x, pos.y+1, maskDOWN_NEGATE);
-                            break;
-                        case movs.DOWN:
-                            quit_direction(walls,   pos.x,   pos.y, maskDOWN_NEGATE);
-                            quit_direction(walls,   pos.x, pos.y-1, maskUP_NEGATE);
-                            break;
-                        case movs.LEFT:
-                            quit_direction(walls,   pos.x,   pos.y, maskLEFT_NEGATE);
-                            quit_direction(walls, pos.x-1,   pos.y, maskRIGHT_NEGATE);
-                            break;
-                        case movs.RIGHT:
-                            quit_direction(walls,   pos.x,   pos.y, maskRIGHT_NEGATE);
-                            quit_direction(walls, pos.x+1,   pos.y, maskLEFT_NEGATE);
-                            break;
-                    }
+                    this.blockOffDeadEnd(viewDir, walls, pos);
                 }
-                
+
                 if( dirs.length > 0 ){
                     let dir = dirs.sample();
-                    let movDuration = beat - timer;
+                    let forwardDuration = movDuration;
 
                     if(dir == viewDir.left()) {
                         // need to rotate once
-                        movDuration -= rotSpeed; //take out rotation duration from foward movement duration 
+                        forwardDuration -= rotSpeed; //take out rotation duration from foward movement duration 
                         movements.push({ "mov" : movs.ROTL, "t" : rotSpeed, "beat" : true});
                     } else if (dir == viewDir.right()) {
                         // need to rotate once
-                        movDuration -= rotSpeed;
+                        forwardDuration -= rotSpeed;
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : true});
                     } else if (dir == viewDir.behind()) {
                         // need to rotate twice
-                        movDuration -= rotSpeed*2;
+                        forwardDuration -= rotSpeed*2;
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : true});
                         movements.push({ "mov" : movs.ROTR, "t" : rotSpeed, "beat" : false});
                     }                
-                    movements.push({ "mov" : dir, "t" : movDuration, "beat" : dir == viewDir.forward()});
+                    movements.push({ "mov" : dir, "t" : forwardDuration, "beat" : dir == viewDir.forward()});
                     timer += movDuration;
                     viewDir.set(dir);
 
@@ -244,6 +277,7 @@ class Animation {
                             break;
                     }
                 }
+                
                 //If no movement was pushed, we skip this beat
                 continue;
             } else {
@@ -253,6 +287,27 @@ class Animation {
             }
         }
         return movements;
+    }
+
+    blockOffDeadEnd(viewDir, walls, pos) {
+        switch (viewDir.behind()) {
+            case movs.UP:
+                quit_direction(walls, pos.x, pos.y, maskUP_NEGATE);
+                quit_direction(walls, pos.x, pos.y + 1, maskDOWN_NEGATE);
+                break;
+            case movs.DOWN:
+                quit_direction(walls, pos.x, pos.y, maskDOWN_NEGATE);
+                quit_direction(walls, pos.x, pos.y - 1, maskUP_NEGATE);
+                break;
+            case movs.LEFT:
+                quit_direction(walls, pos.x, pos.y, maskLEFT_NEGATE);
+                quit_direction(walls, pos.x - 1, pos.y, maskRIGHT_NEGATE);
+                break;
+            case movs.RIGHT:
+                quit_direction(walls, pos.x, pos.y, maskRIGHT_NEGATE);
+                quit_direction(walls, pos.x + 1, pos.y, maskLEFT_NEGATE);
+                break;
+        }
     }
 
     async animateSeries(movements){
@@ -265,13 +320,30 @@ class Animation {
         for (let i = 1; i < movements.length; ++i) {
             let action = movements[i];
             let nextTween = this.move(movements[i].mov,movements[i].t);
-            if(action.beat && debugMode){
-                //make cube blink
-                let blinkTween = new TWEEN.Tween( this.obj.material.color ).to( {"r":1,"g":0,"b":0}, blinkSpeed).chain(new TWEEN.Tween( this.obj.material.color ).to( {"r":0,"g":1,"b":0}, blinkSpeed));
-                lastTween.chain(nextTween,blinkTween);
-            } else {
-                lastTween.chain(nextTween);
+            let tweens = [nextTween]
+            if(action.beat){
+                if(audioTestOn){
+                    nextTween.onStart( function() { 
+                        positional_sound.play();
+                    } );
+                }
+                if(debugMode){
+                    //make cube blink
+                    let blinkTween = new TWEEN.Tween( this.obj.material.color ).to( {"r":1,"g":0,"b":0}, blinkSpeed).chain(new TWEEN.Tween( this.obj.material.color ).to( {"r":0,"g":1,"b":0}, blinkSpeed));
+                    tweens.push(blinkTween);
+                }
+                if(jumpOn){
+                    let jumpTweenUp   = new TWEEN.Tween( this.obj.position       ).to( {y:"-"+jumpHeight}, jumpSpeedUp);
+                    //jumpTweenUp.easing(TWEEN.Easing.Cubic.In);
+                    let jumpTweenDown = new TWEEN.Tween( this.obj.position       ).to( {y:"+"+jumpHeight}, jumpSpeedDown);
+                    //jumpTweenDown.easing(TWEEN.Easing.Cubic.Out);
+                    jumpTweenUp.chain(jumpTweenDown);
+                    tweens.push(jumpTweenUp);
+                }
             }
+            if(tweens.length==3){lastTween.chain(tweens[0],tweens[1],tweens[2]);};
+            if(tweens.length==2){lastTween.chain(tweens[0],tweens[1]);};
+            if(tweens.length==1){lastTween.chain(tweens[0]);};
             lastTween = nextTween;
         }
         return firstTween;

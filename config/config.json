@@ -1,0 +1,41 @@
+{
+    "Camera": {
+        "FOV": 60,
+        "Near clipping plane": 1,
+        "Far clipping plane": 500
+    },
+    "Debug Mode": false,
+    "Audio test":{
+        "Enable": false,
+        "Audio test path": "./Sounds/beep.mp3",
+        "Volume": 10
+    },
+    "Textures": {
+        "Enable": true,
+        "Texture Pack": "./config/resource_pack/texture_pack_1.json"
+    },
+    "Sound": {
+        "Enable": true,
+        "Loop": false,
+        "Volume": 0.05,
+        "Audio Path": "./beatmaps/928482/928482_audio_Hard.mp3"
+    },
+    "Audio movement data": {
+        "Hitpoints JSON": "../beatmaps/928482/928482_times_Hard.json",
+        "BPMs JSON": "../beatmaps/928482/928482_bpms_Hard.json"
+    },
+    "Maze": {
+        "Maze JSON": "../parser/data_lines.json"
+    },
+    "Movements configs": {
+        "BPM movement" : true,
+        "Rotation speed multiplier" : 0.5,
+        "Min movement duration" : 200,
+        "Blink speed": 125,
+        "BPM multiplier": 4,
+        "Jump ON": false,
+        "Jump speed up": 150,
+        "Jump speed down": 125,
+        "Jump height": 2
+    } 
+}
