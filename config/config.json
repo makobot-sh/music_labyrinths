@@ -14,10 +14,6 @@
         "Enable": true,
         "Texture Pack": "./config/resource_pack/texture_pack_1.json"
     },
-<<<<<<< HEAD
-=======
-    "Debug Mode": false,
->>>>>>> f196a556c8a4028c3bf44bfc40fe84f0d6f7b8ac
     "Sound": {
         "Enable": true,
         "Loop": false,
@@ -25,13 +21,8 @@
         "Audio Path": "./beatmaps/928482/928482_audio_Hard.mp3"
     },
     "Audio movement data": {
-<<<<<<< HEAD
         "Hitpoints JSON": "../beatmaps/928482/928482_times_Hard.json",
         "BPMs JSON": "../beatmaps/928482/928482_bpms_Hard.json"
-=======
-        "Hitpoints JSON": "./beatmaps/95487/95487_times_200bpm.json",
-        "BPMs JSON": "./beatmaps/95487/95487_bpms_200bpm.json"
->>>>>>> f196a556c8a4028c3bf44bfc40fe84f0d6f7b8ac
     },
     "Maze": {
         "Maze JSON": "./parser/data_lines.json"
