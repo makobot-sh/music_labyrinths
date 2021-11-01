@@ -17,7 +17,7 @@
     "Sound": {
         "Enable": true,
         "Loop": false,
-        "Volume": 0.05,
+        "Volume": 0.175,
         "Audio Path": "./beatmaps/928482/928482_audio_Hard.mp3"
     },
     "Audio movement data": {
