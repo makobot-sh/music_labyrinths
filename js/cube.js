@@ -16,6 +16,8 @@ var subject = camera;
 
 cube.position.set( 0, 0, -15);
 
+await beginningScreen()
+
 let audio_settings = auxJs.config["Sound"];
 const listener = new THREE.AudioListener();
 camera.add( listener );
@@ -56,7 +58,6 @@ let anim = new Animation(subject);
 
 
 
-
 const done = await Promise.all([loadAudio(audio_settings, sound),generateMazeAndMovement(anim, auxJs.config)]);
 
 console.log("Starting all!")
@@ -68,7 +69,6 @@ var texture2 = new THREE.TextureLoader().load('../textures/floor.jpg');
 texture2.wrapS = THREE.RepeatWrapping; 
 texture2.wrapT = THREE.RepeatWrapping;
 var floorPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,-5,0], [90,0,0], "Floor Plane", 0x888888);
-
 
 
 let p = document.getElementById("audioButton"); // Encuentra el elemento "p" en el sitio
@@ -86,15 +86,25 @@ p.onclick = function(){
 }
 
 
-
-
-
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
 // Note: this pauses when the user navigates to another browser tab!
 animate();
 
 /* ============================================================== */
+
+async function beginningScreen(){
+    var _hideStartMenu;
+    var promiseStartButton = new Promise((resolve) => { _hideStartMenu = resolve });
+    
+    let p = document.getElementById("playButton"); // Encuentra el elemento "p" en el sitio
+    p.onclick = function(){
+        _hideStartMenu();
+        document.getElementById("startMenu").style.display = "none";
+    }
+    
+    await promiseStartButton;
+}
 
 
 async function loadPositionalAudio(audio_settings, sound_object){
