@@ -59,14 +59,12 @@ body {
     justify-content: center;
     height: 100%;
     z-index: 99;
-    margin-right: 0%;
     width: 100%;
     color:white;
 }
 
 .startOpt {
-    margin-left: 1.5%;
-    align-self:center;
+    margin: .25%;
 }
 
 #counter {

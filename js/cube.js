@@ -1,8 +1,8 @@
 import * as auxJs from './auxiliary-javascript.js';
 import * as auxThree from './auxiliary-three.js';
 import {movs,Animation, maskUP_NEGATE, maskDOWN_NEGATE, maskRIGHT_NEGATE, maskLEFT_NEGATE} from './animation.js';
-export {positional_sound}
-
+import {beginningScreen, debugMenu} from './page-elements.js';
+export {positional_sound, done}
 
 
 var scene_obj = new auxThree.Scene(auxJs.config);
@@ -18,7 +18,7 @@ cube.position.set( 0, 0, -15);
 
 await beginningScreen()
 
-let audio_settings = auxJs.config["Sound"];
+var audio_settings = auxJs.config["Sound"];
 const listener = new THREE.AudioListener();
 camera.add( listener );
 let audio_test_settings = auxJs.config["Audio test"];
@@ -69,21 +69,7 @@ texture2.wrapS = THREE.RepeatWrapping;
 texture2.wrapT = THREE.RepeatWrapping;
 var floorPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,-5,0], [90,0,0], "Floor Plane", 0x888888);
 
-
-let p = document.getElementById("audioButton"); // Encuentra el elemento "p" en el sitio
-var audioOnButtonFlag = true;
-p.onclick = function(){
-    if (audioOnButtonFlag){
-        done[0].setVolume(0);
-        audioOnButtonFlag = false;
-        document.getElementById("audioButton").textContent = "Audio: disabled";
-    } else {
-        done[0].setVolume(audio_settings["Volume"]);
-        audioOnButtonFlag = true;
-        document.getElementById("audioButton").textContent = "Audio: enabled";
-    }
-}
-
+debugMenu()
 
 //3. Create render/animate loop
 // This creates a loop that causes the renderer to draw the scene *every time the screen is refreshed*
@@ -91,21 +77,6 @@ p.onclick = function(){
 animate();
 
 /* ============================================================== */
-
-async function beginningScreen(){
-    var _hideStartMenu;
-    var promiseStartButton = new Promise((resolve) => { _hideStartMenu = resolve });
-    
-    let p = document.getElementById("playButton"); // Encuentra el elemento "p" en el sitio
-    p.onclick = function(){
-        _hideStartMenu();
-        document.getElementById("startMenu").style.display = "none";
-        document.getElementById("debugHover").style.display = "flex";
-    }
-    
-    await promiseStartButton;
-}
-
 
 async function loadPositionalAudio(audio_settings, sound_object){
     
