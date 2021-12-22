@@ -21,17 +21,34 @@ body {
 }
 
 #debugMenu {
-    display: flex;
+    display: none;
     flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+    z-index: 98;
+    width: 100%;
+    color:white;
+}
+
+.debugOpt {
+    margin-top: 1%;
+}
+
+#debugHover {
+    position: absolute;
+    flex-direction: column;
+    align-items: flex-end;
+    display: none;
+    padding-right: 0.5%;
+    right: 0;
     height: 100%;
     z-index: 98;
     width: 15%;
     color:white;
 }
 
-.debugOpt {
-    margin-left: 1.5%;
-    align-self:center;
+#debugHover:hover > #debugMenu {
+    display: flex;
 }
 
 #startMenu {

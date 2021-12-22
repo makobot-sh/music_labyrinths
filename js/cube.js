@@ -46,7 +46,6 @@ if (auxThree.debugMode){
     
 } else {
     camera.position.set( 0, 0, -15);
-    scene.add(cube); 
     var roofPlane = auxThree.createPlane(scene, [800, 800], [cube.position.x,20,0], [90,0,0], "Roof Plane", 0xAAAAAA);
 }
 
@@ -101,6 +100,7 @@ async function beginningScreen(){
     p.onclick = function(){
         _hideStartMenu();
         document.getElementById("startMenu").style.display = "none";
+        document.getElementById("debugHover").style.display = "flex";
     }
     
     await promiseStartButton;
