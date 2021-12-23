@@ -14,7 +14,7 @@ def selectDifficulty(difficulties):
 	while(True):
 		try:	 
 			n1 = int(input('Select difficulty (input index number): '))
-			if(n1 > 1 and n1 < len(difficulties)):
+			if(n1 >= 1 and n1 < len(difficulties)):
 				break
 			else:
 				print("Input must be a number between 1 and {}".format(len(difficulties)))
@@ -87,7 +87,8 @@ if __name__ == "__main__":
 	#Include song's last hitpoint as a bpm with beatLen 0 in bpms json.
 	bpmsSet.append({"start": int(times[-1]), "beatLen": 0})
 
-	newFilePrefix = "{} - {}".format(osuDict["Metadata"]["Title"], osuDict["Metadata"]["Version"])
+	cleanTitle = ''.join(e for e in osuDict["Metadata"]["Title"] if (e.isalnum() or e == ' '))
+	newFilePrefix = "{} - {}".format(cleanTitle, osuDict["Metadata"]["Version"])
 	newFilesPath = f"{beatmapsFolder}/{newFilePrefix}"
 	if not os.path.exists(newFilesPath):
 		os.makedirs(newFilesPath)

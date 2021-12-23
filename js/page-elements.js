@@ -10,8 +10,6 @@ var audioOnButtonFlag = true;
 async function beginningScreen(){
     var _hideStartMenu;
     var promiseStartButton = new Promise((resolve) => { _hideStartMenu = resolve });
-    
-    selectMap()
 
     let p = document.getElementById("playButton"); // Encuentra el elemento "p" en el sitio
     p.onclick = function(){
@@ -22,6 +20,7 @@ async function beginningScreen(){
     }
     
     await populateMapOptions();
+    selectMap()
     await promiseStartButton;
 }
 
@@ -29,22 +28,29 @@ async function populateMapOptions(){
     let mapOptions = await auxJs.getJson(auxJs.config["Maps"]["Maps folder"]+"/maps_index.json");
     let select = document.getElementById('mapSelect');
 
+    let i = 0
     for (let map of mapOptions){
         var opt = document.createElement('option');
         opt.value = map;
         opt.innerText = map;
+        if(i == 0){
+            opt.selected = "selected"
+        }
         select.appendChild(opt);
+        i += 1;
     }
 }
 
 function selectMap(){
-    let selectedMap = document.getElementById('mapSelect').value;
+    let e = document.getElementById('mapSelect');
+    let selectedMap = e.options[e.selectedIndex].text;
     let selectionSubpath = "/"+selectedMap+"/"+selectedMap
 
     let mapsPath = auxJs.config["Maps"]["Maps folder"]
-    //auxJs.config["Sound"]["Audio Path"] = mapsPath+selectionSubpath+"_audio.mp3"
-    //auxJs.config["Audio movement data"]["Hitpoints JSON"] = mapsPath+selectionSubpath+"_times.json"
-    //auxJs.config["Audio movement data"]["Hitpoints JSON"] = mapsPath+selectionSubpath+"_bpms.json"
+    auxJs.config["Sound"]["Audio Path"] = mapsPath+selectionSubpath+"_audio.mp3"
+    auxJs.config["Audio movement data"]["Hitpoints JSON"] = mapsPath+selectionSubpath+"_times.json"
+    auxJs.config["Audio movement data"]["BPMs JSON"] = mapsPath+selectionSubpath+"_bpms.json"
+    console.log(mapsPath+selectionSubpath+"_audio.mp3")
 }
 
 function debugMenu(){
