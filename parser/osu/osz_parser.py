@@ -31,6 +31,18 @@ def unzipOsz(extractionPath):
 		print("Failed to unzip with error: {}".format(e))
 		exit(1)
 
+def updateMapsIndex():
+	availableMaps = []
+	for file in os.listdir(beatmapsFolder):
+		d = os.path.join(beatmapsFolder, file)
+		if os.path.isdir(d):
+			availableMaps.append(file)
+	
+	indexPath = os.path.join(beatmapsFolder, "maps_index.json")
+	with open(indexPath, 'w', encoding='utf-8') as f:
+		json.dump(availableMaps, f, ensure_ascii=False, indent=4)
+	
+
 if __name__ == "__main__":
 	if(len(sys.argv) < 2):
 		print("Error! Missing arguments")
@@ -95,5 +107,7 @@ if __name__ == "__main__":
 	shutil.copyfile(audioFilePath, copyFilePath)
 	
 	shutil.rmtree(extractionPath)
+
+	updateMapsIndex()
 
 	print("Done!")

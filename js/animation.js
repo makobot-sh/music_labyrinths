@@ -8,7 +8,7 @@ export {
     maskRIGHT_NEGATE,
     maskLEFT_NEGATE
 }
-import {positional_sound} from './cube.js';
+import {positional_sound} from './musical-labyrinth.js';
 
 const rotSpeedMult = config["Movements configs"]["Rotation speed multiplier"];
 const blinkSpeed = config["Movements configs"]["Blink speed"];

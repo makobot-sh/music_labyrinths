@@ -1,4 +1,4 @@
-import {done} from './cube.js';
+import {done} from './musical-labyrinth.js';
 import * as auxJs from './auxiliary-javascript.js';
 export{
     beginningScreen,

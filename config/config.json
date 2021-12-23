@@ -20,6 +20,10 @@
         "Volume": 0.05,
         "Audio Path": "./beatmaps/Roki - Hard/Roki - Hard_audio.mp3"
     },
+    "Maps" : {
+        "Maps folder": "../beatmaps",
+        "Maps index": "../beatmaps/maps_index.json"
+    },
     "Audio movement data": {
         "Hitpoints JSON": "../beatmaps/Roki - Hard/Roki - Hard_times.json",
         "BPMs JSON": "../beatmaps/Roki - Hard/Roki - Hard_bpms.json"
