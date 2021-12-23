@@ -14,22 +14,21 @@
         "Enable": true,
         "Texture Pack": "./config/resource_pack/texture_pack_1.json"
     },
+    "Maps" : {
+        "Maps folder": "./beatmaps"
+    },
     "Sound": {
         "Enable": true,
         "Loop": false,
         "Volume": 0.05,
         "Audio Path": "./beatmaps/Roki - Hard/Roki - Hard_audio.mp3"
     },
-    "Maps" : {
-        "Maps folder": "../beatmaps",
-        "Maps index": "../beatmaps/maps_index.json"
-    },
     "Audio movement data": {
-        "Hitpoints JSON": "../beatmaps/Roki - Hard/Roki - Hard_times.json",
-        "BPMs JSON": "../beatmaps/Roki - Hard/Roki - Hard_bpms.json"
+        "Hitpoints JSON": "./beatmaps/Roki - Hard/Roki - Hard_times.json",
+        "BPMs JSON": "./beatmaps/Roki - Hard/Roki - Hard_bpms.json"
     },
     "Maze": {
-        "Maze JSON": "../parser/data_lines.json"
+        "Maze JSON": "./parser/data_lines.json"
     },
     "Movements configs": {
         "BPM movement" : true,

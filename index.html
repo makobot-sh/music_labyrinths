@@ -6,8 +6,6 @@
 		<link href="index.css" rel="stylesheet" />
 	</head>
 	<body>
-		<audio id="audio" preload="auto" style="display: none">
-			<source src="audio.mp3" type="audio/ogg"> </audio>
 		<script src="js/three.js"></script>
 		<script src="js/tween.umd.js"></script>
 		<script type="module" src="js/musical-labyrinth.js"></script>
@@ -24,10 +22,7 @@
 			</div>
 			<div id="startMenu">
 				<h3 class="startOpt">Press play to start!</h3>
-				<select class="startOpt" name="select">
-					<option value="value1" selected>Value 1</option>
-					<option value="value2">Value 2</option>
-					<option value="value3">Value 3</option>
+				<select class="startOpt" name="mapSelect" id="mapSelect">
 				</select>
 				<button id="playButton" class="startOpt" type="button">Play!</button>
 			</div>

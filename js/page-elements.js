@@ -11,14 +11,40 @@ async function beginningScreen(){
     var _hideStartMenu;
     var promiseStartButton = new Promise((resolve) => { _hideStartMenu = resolve });
     
+    selectMap()
+
     let p = document.getElementById("playButton"); // Encuentra el elemento "p" en el sitio
     p.onclick = function(){
+        selectMap();
         _hideStartMenu();
         document.getElementById("startMenu").style.display = "none";
         document.getElementById("debugHover").style.display = "flex";
     }
     
+    await populateMapOptions();
     await promiseStartButton;
+}
+
+async function populateMapOptions(){
+    let mapOptions = await auxJs.getJson(auxJs.config["Maps"]["Maps folder"]+"/maps_index.json");
+    let select = document.getElementById('mapSelect');
+
+    for (let map of mapOptions){
+        var opt = document.createElement('option');
+        opt.value = map;
+        opt.innerText = map;
+        select.appendChild(opt);
+    }
+}
+
+function selectMap(){
+    let selectedMap = document.getElementById('mapSelect').value;
+    let selectionSubpath = "/"+selectedMap+"/"+selectedMap
+
+    let mapsPath = auxJs.config["Maps"]["Maps folder"]
+    //auxJs.config["Sound"]["Audio Path"] = mapsPath+selectionSubpath+"_audio.mp3"
+    //auxJs.config["Audio movement data"]["Hitpoints JSON"] = mapsPath+selectionSubpath+"_times.json"
+    //auxJs.config["Audio movement data"]["Hitpoints JSON"] = mapsPath+selectionSubpath+"_bpms.json"
 }
 
 function debugMenu(){
