@@ -37,8 +37,8 @@
         "Blink speed": 125,
         "BPM multiplier": 4,
         "Jump ON": false,
-        "Jump speed up": 150,
+        "Jump speed up": 75,
         "Jump speed down": 125,
-        "Jump height": 2
+        "Jump height": 1
     } 
 }
