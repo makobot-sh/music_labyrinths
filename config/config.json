@@ -32,8 +32,8 @@
     },
     "Movements configs": {
         "BPM movement" : true,
-        "Rotation speed multiplier" : 0.5,
-        "Min movement duration" : 200,
+        "Rotation speed multiplier" : 0.75,
+        "Min movement duration" : 250,
         "Blink speed": 125,
         "BPM multiplier": 4,
         "Jump ON": false,

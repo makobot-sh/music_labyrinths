@@ -6,7 +6,7 @@ export {
   
 }
 
-var config = await getJson("../config/config.json");
+var config = await getJson("./config/config.json");
 
 function printError(error, path, explicit) {
   console.log(`[${explicit ? 'EXPLICIT' : 'INEXPLICIT'}] ${error.name}: ${error.message}, JSON Path: ${path}. This error probably occurs because JSON file has a syntax error or does not exist`);
