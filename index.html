@@ -6,17 +6,25 @@
 		<link href="index.css" rel="stylesheet" />
 	</head>
 	<body>
-		<audio id="audio" preload="auto" style="display: none">
-			<source src="audio.mp3" type="audio/ogg"> </audio>
 		<script src="js/three.js"></script>
 		<script src="js/tween.umd.js"></script>
-		<script type="module" src="js/cube.js"></script>
+		<script type="module" src="js/musical-labyrinth.js"></script>
 		<div id="container">
 			<div id="player"></div>
-			<div id="debugMenu">
-				<!-- <h1>Debug menu</h1> -->
-				<!-- <div id="counter" class="debugOpt">0</div> -->
-				<button id="audioButton" class="debugOpt" type="button">Toggle audio</button>
+			<div id="debugHover"> 
+				Options 
+				<div id="debugMenu">
+					<!--  <h1>Debug menu</h1> -->
+					<!-- <div id="counter" class="debugOpt">0</div> -->
+					<button id="audioButton" class="debugOpt" type="button">Toggle audio</button>
+					<!--  <button id="pauseButton" class="debugOpt" type="button">Pause</button> -->
+				</div>
+			</div>
+			<div id="startMenu">
+				<h3 class="startOpt">Press play to start!</h3>
+				<select class="startOpt" name="mapSelect" id="mapSelect">
+				</select>
+				<button id="playButton" class="startOpt" type="button">Play!</button>
 			</div>
 		</div>
 	</body>

@@ -8,7 +8,7 @@ export {
     maskRIGHT_NEGATE,
     maskLEFT_NEGATE
 }
-import {positional_sound} from './cube.js';
+import {positional_sound} from './musical-labyrinth.js';
 
 const rotSpeedMult = config["Movements configs"]["Rotation speed multiplier"];
 const blinkSpeed = config["Movements configs"]["Blink speed"];
@@ -333,12 +333,13 @@ class Animation {
                     tweens.push(blinkTween);
                 }
                 if(jumpOn){
-                    let jumpTweenUp   = new TWEEN.Tween( this.obj.position       ).to( {y:"-"+jumpHeight}, jumpSpeedUp);
+                    let jumpTweenUp   = new TWEEN.Tween( this.obj.position       ).to( {y:jumpHeight}, jumpSpeedUp);
                     //jumpTweenUp.easing(TWEEN.Easing.Cubic.In);
-                    let jumpTweenDown = new TWEEN.Tween( this.obj.position       ).to( {y:"+"+jumpHeight}, jumpSpeedDown);
+                    let jumpTweenDown = new TWEEN.Tween( this.obj.position       ).to( {y:0}, jumpSpeedDown);
                     //jumpTweenDown.easing(TWEEN.Easing.Cubic.Out);
                     jumpTweenUp.chain(jumpTweenDown);
-                    tweens.push(jumpTweenUp);
+                    tweens.push(jumpTweenUp)
+                    //nextTween = jumpTweenUp;
                 }
             }
             if(tweens.length==3){lastTween.chain(tweens[0],tweens[1],tweens[2]);};

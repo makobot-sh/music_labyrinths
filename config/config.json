@@ -14,28 +14,31 @@
         "Enable": true,
         "Texture Pack": "./config/resource_pack/texture_pack_1.json"
     },
+    "Maps" : {
+        "Maps folder": "./beatmaps"
+    },
     "Sound": {
         "Enable": true,
         "Loop": false,
-        "Volume": 0.175,
-        "Audio Path": "./beatmaps/928482/928482_audio_Hard.mp3"
+        "Volume": 0.05,
+        "Audio Path": "./beatmaps/Roki - Hard/Roki - Hard_audio.mp3"
     },
     "Audio movement data": {
-        "Hitpoints JSON": "./beatmaps/928482/928482_times_Hard.json",
-        "BPMs JSON": "./beatmaps/928482/928482_bpms_Hard.json"
+        "Hitpoints JSON": "./beatmaps/Roki - Hard/Roki - Hard_times.json",
+        "BPMs JSON": "./beatmaps/Roki - Hard/Roki - Hard_bpms.json"
     },
     "Maze": {
         "Maze JSON": "./parser/data_lines.json"
     },
     "Movements configs": {
         "BPM movement" : true,
-        "Rotation speed multiplier" : 0.5,
-        "Min movement duration" : 200,
+        "Rotation speed multiplier" : 0.75,
+        "Min movement duration" : 250,
         "Blink speed": 125,
         "BPM multiplier": 4,
         "Jump ON": false,
-        "Jump speed up": 150,
+        "Jump speed up": 75,
         "Jump speed down": 125,
-        "Jump height": 2
+        "Jump height": 1
     } 
 }
