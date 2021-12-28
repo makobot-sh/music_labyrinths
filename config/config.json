@@ -12,7 +12,8 @@
     },
     "Textures": {
         "Enable": true,
-        "Texture Pack": "./config/resource_pack/texture_pack_1.json"
+        "Texture Packs Folder": "./config/resource_pack",
+        "Texture Pack": "./config/resource_pack/Windows 95.json"
     },
     "Maps" : {
         "Maps folder": "./beatmaps"

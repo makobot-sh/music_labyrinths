@@ -185,7 +185,9 @@ class Animation {
             //so nextBPMIdx will be a valid index of timingPointArr
 
             let beatLen = timingPointArr[startBPMIdx]['beatLen'];
-            while( beatLen < minMovLen ){ beatLen *= 2; }
+            let mult = 1
+            while( beatLen*mult < minMovLen ){ mult *= 2;}
+            beatLen = beatLen * mult;
             while( timeCounter + beatLen < timingPointArr[nextBPMIdx]['start']){
                 //If the time to push wouldn't be able to complete itself, we won't push it
                 times.push(timeCounter);
@@ -229,7 +231,7 @@ class Animation {
                     if( (currWalls & getMask(viewDir.left())) != 0){ dirs.push(viewDir.left()) };
                     if( (currWalls & getMask(viewDir.right())) != 0){ dirs.push(viewDir.right()) };    
                 }
-                if ( (currWalls & viewDir.mask()) != 0){ dirs.push(viewDir.forward()) };
+                if ( (currWalls & viewDir.mask()) != movs.NONE){ dirs.push(viewDir.forward()) };
 
                 // Only turn around if there's no other direction to go
                 if ( (currWalls == getMask(viewDir.behind())) && (movDuration >= minMovLen+rotSpeed*2) ){

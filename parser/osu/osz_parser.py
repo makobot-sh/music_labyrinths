@@ -5,7 +5,8 @@ import os
 import shutil
 import osu_reader
 
-beatmapsFolder = "../../beatmaps"
+scriptFolder = os.path.abspath(os.path.dirname(__file__))
+beatmapsFolder = os.path.join(scriptFolder, "../../beatmaps")
 
 def detectDifficulty(filename):
 	return filename.split("[")[1].split("]")[0]
@@ -59,7 +60,7 @@ if __name__ == "__main__":
 	id = os.path.basename(filePath)[0:6].strip()
 
 	print("Uncompressing OSU! beatmap...")
-	extractionPath = f"{beatmapsFolder}/temp"
+	extractionPath = os.path.join(beatmapsFolder, "temp")
 
 	unzipOsz(extractionPath)
 
@@ -89,7 +90,7 @@ if __name__ == "__main__":
 
 	cleanTitle = ''.join(e for e in osuDict["Metadata"]["Title"] if (e.isalnum() or e == ' '))
 	newFilePrefix = "{} - {}".format(cleanTitle, osuDict["Metadata"]["Version"])
-	newFilesPath = f"{beatmapsFolder}/{newFilePrefix}"
+	newFilesPath = os.path.join(beatmapsFolder, newFilePrefix)
 	if not os.path.exists(newFilesPath):
 		os.makedirs(newFilesPath)
 
