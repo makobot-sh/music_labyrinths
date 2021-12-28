@@ -5,15 +5,10 @@ export {
     debugMode,
     deg2rad,
     rad2deg,
-    createPlane,
     create_cube,
-    createTexture,
     TextureManager,
-    textureBase,
     Scene
 }
-var texture_config = await auxJs.getJson(auxJs.config["Textures"]["Texture Pack"]);
-
 
 class Scene {
     constructor(settings){
@@ -37,10 +32,10 @@ class Scene {
 };
 
 class TextureManager {
-    constructor(settings){
+    constructor(settings, texturePackJson){
         this.textureEnable = settings["Enable"];
         if (this.textureEnable){
-            this.texturePackPaths = texture_config;
+            this.texturePackPaths = texturePackJson;
             this.texturePack = {};
         }
     }
@@ -50,10 +45,10 @@ class TextureManager {
         let texture = undefined;
         if (this.textureEnable){
             if(this.textureEnable && !(id in this.texturePack) ){
-                console.log(id);
+                console.log("Getting texture for: " +id);
                 let path = this.texturePackPaths[id];
                 if (path != undefined && path["Enable"]){
-                    texture = createTexture(path["Path"]);
+                    texture = this.createTexture(path["Path"]);
                     this.texturePack[id] = texture;
                     texture.wrapS = THREE.RepeatWrapping; 
                     texture.wrapT = THREE.RepeatWrapping;
@@ -74,11 +69,39 @@ class TextureManager {
         return this.texturesEnable;
     }
 
+    
+    createTexture(path){
+        var texture = new THREE.TextureLoader().load(path);
 
+        // assuming you want the texture to repeat in both directions:
+        texture.wrapS = THREE.RepeatWrapping; 
+        texture.wrapT = THREE.RepeatWrapping;
+        return texture
+    }
+
+    createPlane(scene, dimentions, pos, deg, id, color = 0xAAAAAA){
+        const geometry = new THREE.PlaneGeometry( dimentions[0], dimentions[1]);
+        
+        let texture = this.getTexture(id);
+        if (id == undefined || texture == undefined){
+            var material = new THREE.MeshPhongMaterial( {color: color, side: THREE.DoubleSide} );
+        } else {
+            var material = new THREE.MeshPhongMaterial({ map : texture });
+        }
+        const plane = new THREE.Mesh( geometry, material );
+        plane.position.set(pos[0],pos[1],pos[2]);
+        plane.receiveShadow = false;
+        plane.material.side = THREE.DoubleSide;
+        const rot = new THREE.Vector3(0, Math.PI /2, 0);
+        plane.rotation.x = deg2rad(deg[0]);
+        plane.rotation.y = deg2rad(deg[1]);
+        plane.rotation.z = deg2rad(deg[2]);
+        scene.add(plane);
+        return plane;
+    }
 };
 var ninetyDeg = '1.5707963267948966';
 var debugMode = auxJs.config["Debug Mode"];
-var textureBase = new TextureManager(auxJs.config["Textures"]);
 
 function deg2rad(deg){
     var pi = Math.PI;
@@ -97,34 +120,5 @@ function create_cube(){
     return cube;
 }
 
-function createTexture(path){
-    var texture = new THREE.TextureLoader().load(path);
-
-    // assuming you want the texture to repeat in both directions:
-    texture.wrapS = THREE.RepeatWrapping; 
-    texture.wrapT = THREE.RepeatWrapping;
-    return texture
-}
-
-function createPlane(scene, dimentions, pos, deg, id, color = 0xAAAAAA){
-    const geometry = new THREE.PlaneGeometry( dimentions[0], dimentions[1]);
-    
-    let texture = textureBase.getTexture(id);
-    if (id == undefined || texture == undefined){
-        var material = new THREE.MeshPhongMaterial( {color: color, side: THREE.DoubleSide} );
-    } else {
-        var material = new THREE.MeshPhongMaterial({ map : texture });
-    }
-    const plane = new THREE.Mesh( geometry, material );
-    plane.position.set(pos[0],pos[1],pos[2]);
-    plane.receiveShadow = false;
-    plane.material.side = THREE.DoubleSide;
-    const rot = new THREE.Vector3(0, Math.PI /2, 0);
-    plane.rotation.x = deg2rad(deg[0]);
-    plane.rotation.y = deg2rad(deg[1]);
-    plane.rotation.z = deg2rad(deg[2]);
-    scene.add(plane);
-    return plane;
-}
 
 

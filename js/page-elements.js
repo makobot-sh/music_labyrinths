@@ -14,19 +14,36 @@ async function beginningScreen(){
     let p = document.getElementById("playButton"); // Encuentra el elemento "p" en el sitio
     p.onclick = function(){
         selectMap();
+        selectTexturePack();
         _hideStartMenu();
         document.getElementById("startMenu").style.display = "none";
         document.getElementById("debugHover").style.display = "flex";
     }
     
-    await populateMapOptions();
-    selectMap()
+    await Promise.all([populateMapOptions(), populateTextureOptions()]);
     await promiseStartButton;
 }
 
 async function populateMapOptions(){
     let mapOptions = await auxJs.getJson(auxJs.config["Maps"]["Maps folder"]+"/maps_index.json");
     let select = document.getElementById('mapSelect');
+
+    let i = 0
+    for (let map of mapOptions){
+        var opt = document.createElement('option');
+        opt.value = map;
+        opt.innerText = map;
+        if(i == 0){
+            opt.selected = "selected"
+        }
+        select.appendChild(opt);
+        i += 1;
+    }
+}
+
+async function populateTextureOptions(){
+    let mapOptions = await auxJs.getJson(auxJs.config["Textures"]["Texture Packs Folder"]+"/textures_index.json");
+    let select = document.getElementById('textureSelect');
 
     let i = 0
     for (let map of mapOptions){
@@ -51,6 +68,13 @@ function selectMap(){
     auxJs.config["Audio movement data"]["Hitpoints JSON"] = mapsPath+selectionSubpath+"_times.json"
     auxJs.config["Audio movement data"]["BPMs JSON"] = mapsPath+selectionSubpath+"_bpms.json"
     console.log(mapsPath+selectionSubpath+"_audio.mp3")
+}
+
+function selectTexturePack(){
+    let e = document.getElementById('textureSelect');
+    let selectedMap = e.options[e.selectedIndex].text;
+    auxJs.config["Textures"]["Texture Pack"] = auxJs.config["Textures"]["Texture Packs Folder"] +"/"+selectedMap+".json";
+    console.log(auxJs.config["Textures"]["Texture Packs Folder"] +"/"+selectedMap+".json")
 }
 
 function debugMenu(){

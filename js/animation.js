@@ -231,7 +231,7 @@ class Animation {
                     if( (currWalls & getMask(viewDir.left())) != 0){ dirs.push(viewDir.left()) };
                     if( (currWalls & getMask(viewDir.right())) != 0){ dirs.push(viewDir.right()) };    
                 }
-                if ( (currWalls & viewDir.mask()) != 0){ dirs.push(viewDir.forward()) };
+                if ( (currWalls & viewDir.mask()) != movs.NONE){ dirs.push(viewDir.forward()) };
 
                 // Only turn around if there's no other direction to go
                 if ( (currWalls == getMask(viewDir.behind())) && (movDuration >= minMovLen+rotSpeed*2) ){

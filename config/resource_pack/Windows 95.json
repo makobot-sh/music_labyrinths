@@ -1,0 +1,26 @@
+{
+    "Floor Plane":{
+        "Enable": true,
+        "Path": "./textures/oldSchool/floor.bmp",
+        "RepeatV": 24,
+        "RepeatH": 24
+    },
+    "Roof Plane":{
+        "Enable": true,
+        "Path": "./textures/oldSchool/ceiling2.bmp",
+        "RepeatV": 24,
+        "RepeatH": 24
+    },
+    "Wall Plane":{
+        "Enable": true,
+        "Path": "./textures/oldSchool/wall.bmp",
+        "RepeatV": 2,
+        "RepeatH": 2
+    },
+    "Entry Plane":{
+        "Enable": true,
+        "Path": "./textures/oldSchool/start.bmp",
+        "RepeatV": 1,
+        "RepeatH": 1
+    }
+}

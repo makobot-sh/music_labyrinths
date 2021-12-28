@@ -27,6 +27,7 @@ let audio_test_settings = auxJs.config["Audio test"];
 //   which is probably why your example wasn't working
 //texture.repeat.set( 400, 400 ); 
 
+
 if (audio_test_settings["Enable"]){
         
     var positional_sound = new THREE.PositionalAudio( listener );
@@ -36,20 +37,6 @@ if (audio_test_settings["Enable"]){
     cubeSound.add(positional_sound)
     scene.add(cubeSound);
 }
-if (auxThree.debugMode){
-    camera.position.set( 0, 300, -100);
-    camera.lookAt( 0, 0, -100)
-   
-    subject = cube;
-    scene.add(cube); // by default, it is added at (0,0,0)
-    
-    
-} else {
-    camera.position.set( 0, 0, -15);
-    var roofPlane = auxThree.createPlane(scene, [1200, 1200], [cube.position.x,15,0], [90,0,0], "Roof Plane", 0xAAAAAA);
-}
-
-
 
 const sound = new THREE.Audio( listener );
 
@@ -64,10 +51,6 @@ if (audio_settings["Enable"]){
     done[0].play();
 }
 done[1].start();
-var texture2 = new THREE.TextureLoader().load('../textures/floor.png');
-texture2.wrapS = THREE.RepeatWrapping; 
-texture2.wrapT = THREE.RepeatWrapping;
-var floorPlane = auxThree.createPlane(scene, [1200, 1200], [cube.position.x,-15,0], [90,0,0], "Floor Plane", 0x888888);
 
 debugMenu()
 
@@ -134,20 +117,49 @@ async function loadAudio(audio_settings, sound_object){
     return sound;
 }
 
+async function loadTexturesAndMaze(config, textureJson){
+    var textureManager = new auxThree.TextureManager(auxJs.config["Textures"], textureJson);
+    if (auxThree.debugMode){
+        camera.position.set( 0, 300, -100);
+        camera.lookAt( 0, 0, -100)
+    
+        subject = cube;
+        scene.add(cube); // by default, it is added at (0,0,0)
+    } else {
+        camera.position.set( 0, 0, -15);
+        textureManager.createPlane(scene, [1200, 1200], [cube.position.x,15,0], [90,0,0], "Roof Plane", 0xAAAAAA);
+        textureManager.createPlane(scene, [1200, 1200], [cube.position.x,-15,0], [90,0,0], "Floor Plane", 0x888888);
+    }
+    return await generate_maze(config, textureManager);
+}
+
+async function setupScene(config){
+    let res;
+    if(auxJs.config["Textures"]){
+        res = auxJs.getJson(auxJs.config["Textures"]["Texture Pack"]).then( (textureJson) => { return loadTexturesAndMaze(config, textureJson); } )
+    } else {
+        res = loadTexturesAndMaze(config, null);
+    }
+    return await res;
+}
 
 async function generateMazeAndMovement(anim, config){
     // binary: 0bLRDU - Left, Right, Down, Up
-    var matrix = await generate_maze(config["Maze"]);
-    let bpmsDict = await loadAudioData(config["Audio movement data"], "BPMs JSON");
-    let timesAndRots = await anim.generateTimesFromBPM(bpmsDict);
+    let matrixLoad = setupScene(config["Maze"]);
+    let timesAndRotsLoad = loadAudioData(config["Audio movement data"], "BPMs JSON").then((bpmsDict) => { return anim.generateTimesFromBPM(bpmsDict) } );
+    
+    let values = await Promise.all([matrixLoad, timesAndRotsLoad])
+    var matrix = values[0];
+    let timesAndRots = values[1];
+
     let movements;
     if(config["Movements configs"]["BPM Movement"]){
-        movements = await anim.generateMovements(matrix, timesAndRots['times'], timesAndRots['rotSpeeds']);
+        movements = anim.generateMovements(matrix, timesAndRots['times'], timesAndRots['rotSpeeds']);
     } else {
-        let times = await loadAudioData(config["Audio movement data"], "Hitpoints JSON");
-        movements = await anim.generateMovements(matrix, times, [timesAndRots['rotSpeeds'][0]]);
+        movements = loadAudioData(config["Audio movement data"], "Hitpoints JSON").then((times) => anim.generateMovements(matrix, times, [timesAndRots['rotSpeeds'][0]]));
     }
-    let startTween = await anim.animateSeries(movements);
+
+    let startTween = await movements.then((movementChain) => anim.animateSeries(movementChain));
     console.log("Finished animation load");
 
     return startTween;
@@ -179,7 +191,7 @@ async function loadAudioData(audioConfig, key){
     return data;
 }
 
-async function generate_maze(config){
+async function generate_maze(config, textureManager){
   
     //Read the JSON file
     var json = await auxJs.getJson(config["Maze JSON"])
@@ -212,7 +224,7 @@ async function generate_maze(config){
                 if (y_value > 0){
                     auxJs.quit_direction(matrix, x_value, y_value - 1, maskUP_NEGATE)
                 }
-                auxThree.createPlane(scene, [30, high], [x1,0,-y1], [0,0,0], "Wall Plane", 0xF08282);
+                textureManager.createPlane(scene, [30, high], [x1,0,-y1], [0,0,0], "Wall Plane", 0xF08282);
             } else {
                 
                 //The coordinates corresponds with the node that is at the right of them.
@@ -224,7 +236,7 @@ async function generate_maze(config){
                     auxJs.quit_direction(matrix, x_value - 1, y_value, maskRIGHT_NEGATE)  
                 }
 
-                auxThree.createPlane(scene, [30, high], [x2-15,0,-y2+15], [0,90,0], "Wall Plane");    
+                textureManager.createPlane(scene, [30, high], [x2-15,0,-y2+15], [0,90,0], "Wall Plane");    
             }
 
            
@@ -236,7 +248,7 @@ async function generate_maze(config){
    
 
     //Wall off entry point
-    auxThree.createPlane(scene, [30,30], [-15,0,-15], [0,90,0], "Entry Plane");
+    textureManager.createPlane(scene, [30,30], [-15,0,-15], [0,90,0], "Entry Plane");
     auxJs.quit_direction(matrix, 0, 0, maskLEFT_NEGATE)
     return matrix;
 }
