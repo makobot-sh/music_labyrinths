@@ -31,8 +31,8 @@ class Scene {
         document.getElementById("player").appendChild(renderer.domElement); //<canvas> element our renderer uses to display the scene to us        
         this.renderer = renderer;
         this.scene.fog = new THREE.Fog(0xa0a0a0, 10, 500);
-        //this.light = new THREE.AmbientLight( 0xFFEEEE , 1);
-        //this.scene.add(this.light);
+        this.light = new THREE.AmbientLight( 0xFEFEFE , 1);
+        this.scene.add(this.light);
     }
 };
 
