@@ -1,14 +1,26 @@
 {
     "Floor Plane":{
-        "Enable": false,
-        "Path": ""
+        "Enable": true,
+        "Path": "./textures/floor.png",
+        "RepeatV": 12,
+        "RepeatH": 12
     },
     "Roof Plane":{
-        "Enable": false,
-        "Path": ""
+        "Enable": true,
+        "Path": "./textures/roof3.png",
+        "RepeatV": 12,
+        "RepeatH": 12
     },
     "Wall Plane":{
         "Enable": true,
-        "Path": "./textures/wall_image.png"
+        "Path": "./textures/wall_image1.png",
+        "RepeatV": 1,
+        "RepeatH": 1
+    },
+    "Entry Plane":{
+        "Enable": true,
+        "Path": "./textures/entrance.png",
+        "RepeatV": 1,
+        "RepeatH": 1
     }
 }
