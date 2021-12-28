@@ -30,7 +30,9 @@ class Scene {
                     //eg: etSize(window.innerWidth/2, window.innerHeight/2, false) renders app at half resolution
         document.getElementById("player").appendChild(renderer.domElement); //<canvas> element our renderer uses to display the scene to us        
         this.renderer = renderer;
-
+        this.scene.fog = new THREE.Fog(0xa0a0a0, 10, 500);
+        //this.light = new THREE.AmbientLight( 0xFFEEEE , 1);
+        //this.scene.add(this.light);
     }
 };
 
@@ -52,7 +54,10 @@ class TextureManager {
                 let path = this.texturePackPaths[id];
                 if (path != undefined && path["Enable"]){
                     texture = createTexture(path["Path"]);
-                    this.texturePack[id] = texture
+                    this.texturePack[id] = texture;
+                    texture.wrapS = THREE.RepeatWrapping; 
+                    texture.wrapT = THREE.RepeatWrapping;
+                    texture.repeat.set(path["RepeatH"],path["RepeatV"]);
                 } else {
                     texture = undefined;
                 }
@@ -106,9 +111,9 @@ function createPlane(scene, dimentions, pos, deg, id, color = 0xAAAAAA){
     
     let texture = textureBase.getTexture(id);
     if (id == undefined || texture == undefined){
-        var material = new THREE.MeshBasicMaterial( {color: color, side: THREE.DoubleSide} );
+        var material = new THREE.MeshPhongMaterial( {color: color, side: THREE.DoubleSide} );
     } else {
-        var material = new THREE.MeshBasicMaterial({ map : texture });
+        var material = new THREE.MeshPhongMaterial({ map : texture });
     }
     const plane = new THREE.Mesh( geometry, material );
     plane.position.set(pos[0],pos[1],pos[2]);

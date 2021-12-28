@@ -46,7 +46,7 @@ if (auxThree.debugMode){
     
 } else {
     camera.position.set( 0, 0, -15);
-    var roofPlane = auxThree.createPlane(scene, [800, 800], [cube.position.x,20,0], [90,0,0], "Roof Plane", 0xAAAAAA);
+    var roofPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,15,0], [90,0,0], "Roof Plane", 0xAAAAAA);
 }
 
 
@@ -64,10 +64,10 @@ if (audio_settings["Enable"]){
     done[0].play();
 }
 done[1].start();
-var texture2 = new THREE.TextureLoader().load('../textures/floor.jpg');
+var texture2 = new THREE.TextureLoader().load('../textures/floor.png');
 texture2.wrapS = THREE.RepeatWrapping; 
 texture2.wrapT = THREE.RepeatWrapping;
-var floorPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,-5,0], [90,0,0], "Floor Plane", 0x888888);
+var floorPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,-15,0], [90,0,0], "Floor Plane", 0x888888);
 
 debugMenu()
 
@@ -162,12 +162,12 @@ function animate() {
     if(auxThree.debugMode){
         camera.position.set( cube.position.x, 300, cube.position.z );
     } else {
-        roofPlane.position.set(subject.position.x, 20, subject.position.z);
+        //roofPlane.position.set(subject.position.x, 20, subject.position.z);
     }
     if (audio_test_settings["Enable"]){
         cubeSound.position.set(camera.position.x, camera.position.y + 20, camera.position.z);
     }
-    floorPlane.position.set(subject.position.x, -15, subject.position.z);
+    //floorPlane.position.set(subject.position.x, -15, subject.position.z);
     
 
     renderer.render(scene, camera);
@@ -236,7 +236,7 @@ async function generate_maze(config){
    
 
     //Wall off entry point
-    auxThree.createPlane(scene, [30,30], [-15,0,-15], [0,90,0], "Entry Wall", 0x00ff00);
+    auxThree.createPlane(scene, [30,30], [-15,0,-15], [0,90,0], "Entry Plane");
     auxJs.quit_direction(matrix, 0, 0, maskLEFT_NEGATE)
     return matrix;
 }
