@@ -46,7 +46,7 @@ if (auxThree.debugMode){
     
 } else {
     camera.position.set( 0, 0, -15);
-    var roofPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,15,0], [90,0,0], "Roof Plane", 0xAAAAAA);
+    var roofPlane = auxThree.createPlane(scene, [1200, 1200], [cube.position.x,15,0], [90,0,0], "Roof Plane", 0xAAAAAA);
 }
 
 
@@ -67,7 +67,7 @@ done[1].start();
 var texture2 = new THREE.TextureLoader().load('../textures/floor.png');
 texture2.wrapS = THREE.RepeatWrapping; 
 texture2.wrapT = THREE.RepeatWrapping;
-var floorPlane = auxThree.createPlane(scene, [600, 600], [cube.position.x,-15,0], [90,0,0], "Floor Plane", 0x888888);
+var floorPlane = auxThree.createPlane(scene, [1200, 1200], [cube.position.x,-15,0], [90,0,0], "Floor Plane", 0x888888);
 
 debugMenu()
 

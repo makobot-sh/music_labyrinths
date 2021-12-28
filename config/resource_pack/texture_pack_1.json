@@ -2,14 +2,14 @@
     "Floor Plane":{
         "Enable": true,
         "Path": "./textures/floor.png",
-        "RepeatV": 12,
-        "RepeatH": 12
+        "RepeatV": 24,
+        "RepeatH": 24
     },
     "Roof Plane":{
         "Enable": true,
         "Path": "./textures/roof3.png",
-        "RepeatV": 12,
-        "RepeatH": 12
+        "RepeatV": 24,
+        "RepeatH": 24
     },
     "Wall Plane":{
         "Enable": true,

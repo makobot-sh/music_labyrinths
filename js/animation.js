@@ -185,7 +185,9 @@ class Animation {
             //so nextBPMIdx will be a valid index of timingPointArr
 
             let beatLen = timingPointArr[startBPMIdx]['beatLen'];
-            while( beatLen < minMovLen ){ beatLen *= 2; }
+            let mult = 1
+            while( beatLen*mult < minMovLen ){ mult *= 2;}
+            beatLen = beatLen * mult;
             while( timeCounter + beatLen < timingPointArr[nextBPMIdx]['start']){
                 //If the time to push wouldn't be able to complete itself, we won't push it
                 times.push(timeCounter);
