@@ -44,7 +44,7 @@ class OsuReader:
     
     #Advance readIndex to the line following "sectionStartLine"
     def advanceTo(self, sectionStartLine):
-        with open(self.path, 'r') as file:
+        with open(self.path, 'r', encoding="utf-8") as file:
             for i, line in enumerate(file):
                 if(i < self.readIndex):
                     continue
@@ -55,7 +55,7 @@ class OsuReader:
     # Parse section with content format: "key: value" pairs
     def parsePairsSection(self, sep):
         dict = {}
-        with open(self.path, 'r') as file:
+        with open(self.path, 'r', encoding="utf-8") as file:
             for i, line in enumerate(file):
                 if(i < self.readIndex):
                     continue
@@ -67,7 +67,7 @@ class OsuReader:
 
     def parseTimingPoints(self):
         bpmsSet = []
-        with open(self.path, 'r') as file:
+        with open(self.path, 'r', encoding="utf-8") as file:
             for i, line in enumerate(file):
                 if(i < self.readIndex):
                     continue
@@ -79,7 +79,7 @@ class OsuReader:
 
     def parseHitObjects(self):
         times = []
-        with open(self.path, 'r') as file:
+        with open(self.path, 'r', encoding="utf-8") as file:
             for i, line in enumerate(file):
                 if(i < self.readIndex):
                     continue
@@ -90,7 +90,7 @@ class OsuReader:
         return times
 
     def checkVersion(self):
-        with open(self.path, 'r') as file:
+        with open(self.path, 'r', encoding="utf-8") as file:
             version = file.readline().strip().split(" ")[-1]
             if(version != "v14"):
                 print(f"[WARNING] File is of osu file format {version}, parser is made to support v14. Compatibility with other versions not guaranteed.")
