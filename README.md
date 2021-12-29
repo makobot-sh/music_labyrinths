@@ -21,7 +21,8 @@ Para cargar mapas no incluídos en la demo es necesario descargar el proyecto y 
 Incorporamos un sistema de *texture packs* que permiten cambiar la apariencia del laberinto durante la pantalla de inicio de la aplicación. Cada texture pack permite especificar distintas imágenes para cada una de las superficies del laberinto (suelo, techo, paredes, entradas) y cuanto se repiten horizontal y verticalmente a lo largo de dichas superficies las texturas. Agregar un nuevo texture pack es muy sencillo, se puede realizar copiando alguno de los .json existentes en la carpeta `config/resorce_packs`y modificando las imagenes a las que se apunta. El nombre del resource pack (sin .json) debe ser incluido en `texture_index.json` para que aparezca como opción en el menú de inicio de la aplicación.
 
 ## Ideas for the future
-- Use osu colors in labyrinth palette
+- Use .osu color palette for labyrinth palette
+- Place images included in the .osz as random posters along some labyrinth walls
 - Volume slider during execution
-- Pause button during execution
+- Pause button during execution (abandoned)
 
