@@ -212,6 +212,7 @@ class Animation {
         var movements = [];
         let viewDir = new Movement(movs.UP);
         let rotSpeed = rotSpeeds[0];
+        let isDeadEndPath = false;
 
         movements.push({ "mov" : movs.NONE, "t" : times[0], "beat" : true});
         for (let i = 1; i < times.length; ++i) {
@@ -231,17 +232,26 @@ class Animation {
                     if( (currWalls & getMask(viewDir.left())) != 0){ dirs.push(viewDir.left()) };
                     if( (currWalls & getMask(viewDir.right())) != 0){ dirs.push(viewDir.right()) };    
                 }
-                if ( (currWalls & viewDir.mask()) != movs.NONE){ dirs.push(viewDir.forward()) };
 
+                if ( (currWalls & viewDir.mask()) != 0){ dirs.push(viewDir.forward()) };
+                
                 // Only turn around if there's no other direction to go
                 if ( (currWalls == getMask(viewDir.behind())) && (movDuration >= minMovLen+rotSpeed*2) ){
                     // Trapped, can only move behind
                     // Will only happen in this beat
                     dirs.push(viewDir.behind());
-                    // Don't come back to this spot (we wall it off)
+                    // Don't come back to this spot (we mark there's a dead end path)
+                    isDeadEndPath = true;
                     this.blockOffDeadEnd(viewDir, walls, pos);
                 }
-
+                
+                if ( isDeadEndPath ){
+                    this.blockOffDeadEnd(viewDir, walls, pos);
+                    if ( !this.onlyOneMovementOption(walls[pos.y][pos.x], viewDir) ) {
+                        isDeadEndPath = false;
+                    }
+                }
+                
                 if( dirs.length > 0 ){
                     let dir = dirs.sample();
                     let forwardDuration = movDuration;
@@ -291,6 +301,31 @@ class Animation {
         return movements;
     }
 
+    logWalls(walls, viewDir){
+        let up = ((walls & maskUP) != 0);
+        let down = ((walls & maskDOWN) != 0);
+        let left = ((walls & maskLEFT) != 0);
+        let right = ((walls & maskRIGHT) != 0);
+        console.log(`UP: ${up}, DOWN: ${down}, LEFT: ${left}, RIGHT: ${right}`);
+        left = (walls & getMask(viewDir.left())) != 0;
+        right = (walls & getMask(viewDir.right())) != 0;
+        up = (walls & getMask(viewDir.forward())) != 0;
+        down= (walls & getMask(viewDir.behind())) != 0;
+        console.log(`FORW: ${up}, BACKW: ${down}, ROTL: ${left}, ROTR: ${right}`);
+    }
+
+    onlyOneMovementOption(walls, viewDir){
+        let rotl = (walls & getMask(viewDir.left())) != 0;
+        let rotr = (walls & getMask(viewDir.right())) != 0;
+        let forw = (walls & getMask(viewDir.forward())) != 0;
+        let optionsNum = 0;
+        optionsNum += rotl ? 1 : 0;
+        optionsNum += rotr ? 1 : 0;
+        optionsNum += forw ? 1 : 0;
+        return optionsNum <= 1;
+    }
+
+    // Blocks off the opening behind currently viewed direction
     blockOffDeadEnd(viewDir, walls, pos) {
         switch (viewDir.behind()) {
             case movs.UP:

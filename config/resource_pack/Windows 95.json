@@ -22,5 +22,11 @@
         "Path": "./textures/oldSchool/start.bmp",
         "RepeatV": 1,
         "RepeatH": 1
+    },
+    "Exit Plane":{
+        "Enable": true,
+        "Path": "./textures/oldSchool/end.bmp",
+        "RepeatV": 1,
+        "RepeatH": 1
     }
 }

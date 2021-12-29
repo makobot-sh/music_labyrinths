@@ -127,12 +127,17 @@ async function loadAudio(audio_settings, sound_object){
 
 async function loadTexturesAndMaze(config, textureJson){
     var textureManager = new auxThree.TextureManager(auxJs.config["Textures"], textureJson);
-    
-    if (!auxThree.debugMode) {
-        textureManager.createPlane(scene, [1200, 1200], [cube.position.x,15,0], [90,0,0], "Roof Plane", 0xAAAAAA);
-        textureManager.createPlane(scene, [1200, 1200], [cube.position.x,-15,0], [90,0,0], "Floor Plane", 0x888888);
-    }
-    return await generate_maze(config, textureManager);
+    var _mapSizeLoaded;
+    new Promise((resolve) => { _mapSizeLoaded = resolve })
+        .then( (mapsize) => {
+            if (!auxThree.debugMode) {
+                textureManager.createPlane(scene, [mapsize, mapsize], [(mapsize/2)-15, 15,(-mapsize/2)], [90,0,0], "Roof Plane", 0xAAAAAA);
+            }
+            console.log(`Creating floor of size ${mapsize}`)
+            textureManager.createPlane(scene, [mapsize, mapsize], [(mapsize/2)-15,-15,(-mapsize/2)], [90,0,0], "Floor Plane", 0x888888);
+        });
+
+    return await generate_maze(config, textureManager, _mapSizeLoaded);
 }
 
 async function setupScene(config){
@@ -174,7 +179,7 @@ function animate() {
     //document.getElementById("counter").textContent = parseInt(document.getElementById("counter").textContent) +1;
 
     if(auxThree.debugMode){
-        camera.position.set( cube.position.x, 300, cube.position.z );
+        camera.position.set( cube.position.x, 300, cube.position.z);
     } else {
         //roofPlane.position.set(subject.position.x, 20, subject.position.z);
     }
@@ -193,7 +198,7 @@ async function loadAudioData(audioConfig, key){
     return data;
 }
 
-async function generate_maze(config, textureManager){
+async function generate_maze(config, textureManager, resolveMapSize){
   
     //Read the JSON file
     var json = await auxJs.getJson(config["Maze JSON"])
@@ -205,6 +210,9 @@ async function generate_maze(config, textureManager){
     //Generate the lines given by the JSON (the first two are omitted)
     for (var key in json) {
         if (key == "Height"){
+            console.log("Resolving maze size")
+            var mazeDimentions = json[key]-60; //Mazegenerator adds 60 of white border on all sides
+            resolveMapSize(mazeDimentions); 
             var height = (json[key]+1)/high;
             matrix = auxJs.inicialize_square_matrix(height, 0b1111);
         }
@@ -244,11 +252,10 @@ async function generate_maze(config, textureManager){
         };
 
     }
-   
-   
 
     //Wall off entry point
     textureManager.createPlane(scene, [30,30], [-15,0,-15], [0,90,0], "Entry Plane");
+    textureManager.createPlane(scene, [30,30], [mazeDimentions-15,0,-mazeDimentions+15], [0,90,0], "Exit Plane");
     auxJs.quit_direction(matrix, 0, 0, maskLEFT_NEGATE)
     return matrix;
 }
