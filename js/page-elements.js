@@ -84,12 +84,19 @@ function debugMenu(){
         if (audioOnButtonFlag){
             done[0].setVolume(0);
             audioOnButtonFlag = false;
-            document.getElementById("audioButton").textContent = "Audio: disabled";
+            document.getElementById("audioButton").textContent = "Unmute";
         } else {           
-            var audio_settings = auxJs.config["Sound"];
-            done[0].setVolume(audio_settings["Volume"]);
+            let volSlider = document.getElementById("volumeSlider"); 
+            done[0].setVolume(volSlider.value/100);
             audioOnButtonFlag = true;
-            document.getElementById("audioButton").textContent = "Audio: enabled";
+            document.getElementById("audioButton").textContent = "Mute";
         }
+    }
+    var audio_settings = auxJs.config["Sound"];
+    let volSlider = document.getElementById("volumeSlider"); 
+    volSlider.value = audio_settings["Volume"];
+    volSlider.oninput = function(){
+        console.log(`Setting audio to ${this.value/100}`)
+        done[0].setVolume(this.value/100);
     }
 }

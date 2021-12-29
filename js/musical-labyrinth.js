@@ -79,7 +79,7 @@ async function loadPositionalAudio(audio_settings, sound_object){
             function( buffer ) {
                 sound_object.setBuffer( buffer );
                 sound_object.setRefDistance(100);
-                sound_object.setVolume( audio_settings["Volume"] );
+                sound_object.setVolume( audio_settings["Volume"]/100 );
             },  
             // onProgress callback
             function ( xhr ) {
@@ -107,7 +107,7 @@ async function loadAudio(audio_settings, sound_object){
                 //TODO: sound.preload?
                 sound_object.setBuffer( buffer );
                 sound_object.setLoop( audio_settings["Loop"] );
-                sound_object.setVolume( audio_settings["Volume"] );
+                sound_object.setVolume( audio_settings["Volume"]/100 );
                 resolve();
             },  
             // onProgress callback
