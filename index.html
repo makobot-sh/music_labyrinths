@@ -12,11 +12,14 @@
 		<div id="container">
 			<div id="player"></div>
 			<div id="debugHover"> 
-				Options 
+				<h4> Options </h4>
 				<div id="debugMenu">
 					<!--  <h1>Debug menu</h1> -->
 					<!-- <div id="counter" class="debugOpt">0</div> -->
-					<button id="audioButton" class="debugOpt" type="button">Toggle audio</button>
+					<button id="audioButton" class="debugOpt" type="button">Mute</button>
+					<div class="debugOpt">
+						<input type="range" min="1" max="100" value="100" class="debugOpt" id="volumeSlider">
+					</div>
 					<!--  <button id="pauseButton" class="debugOpt" type="button">Pause</button> -->
 				</div>
 			</div>

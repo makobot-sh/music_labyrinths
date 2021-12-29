@@ -79,7 +79,7 @@ async function loadPositionalAudio(audio_settings, sound_object){
             function( buffer ) {
                 sound_object.setBuffer( buffer );
                 sound_object.setRefDistance(100);
-                sound_object.setVolume( audio_settings["Volume"] );
+                sound_object.setVolume( audio_settings["Volume"]/100 );
             },  
             // onProgress callback
             function ( xhr ) {
@@ -107,7 +107,7 @@ async function loadAudio(audio_settings, sound_object){
                 //TODO: sound.preload?
                 sound_object.setBuffer( buffer );
                 sound_object.setLoop( audio_settings["Loop"] );
-                sound_object.setVolume( audio_settings["Volume"] );
+                sound_object.setVolume( audio_settings["Volume"]/100 );
                 resolve();
             },  
             // onProgress callback
@@ -224,8 +224,9 @@ async function generate_maze(config, textureManager, resolveMapSize){
             let y2 = Math.floor(json[key].y2);
             let x_value = x1/high;
             let y_value = y1/high;
+            //0bLRDU 
             if (y1 == y2){
-                //0bLRDU 
+                //Horizontal walls
                 //The coordinates corresponds with the node that is above of them.
                 if (y_value < height){
                     auxJs.quit_direction(matrix, x_value, y_value, maskDOWN_NEGATE)
@@ -236,7 +237,7 @@ async function generate_maze(config, textureManager, resolveMapSize){
                 }
                 textureManager.createPlane(scene, [30, high], [x1,0,-y1], [0,0,0], "Wall Plane", 0xF08282);
             } else {
-                
+                //Vertical walls
                 //The coordinates corresponds with the node that is at the right of them.
                 if (x_value < height){
                     auxJs.quit_direction(matrix, x_value, y_value, maskLEFT_NEGATE)  

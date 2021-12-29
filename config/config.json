@@ -8,7 +8,7 @@
     "Audio test":{
         "Enable": false,
         "Audio test path": "./Sounds/beep.mp3",
-        "Volume": 10
+        "Volume": 100
     },
     "Textures": {
         "Enable": true,
@@ -21,7 +21,7 @@
     "Sound": {
         "Enable": true,
         "Loop": false,
-        "Volume": 0.05,
+        "Volume": 100,
         "Audio Path": "./beatmaps/Roki - Hard/Roki - Hard_audio.mp3"
     },
     "Audio movement data": {
