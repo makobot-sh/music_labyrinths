@@ -14,7 +14,17 @@ var scene = scene_obj.scene;
 
 var subject = camera;
 
-cube.position.set( 0, 0, -15);
+if (auxThree.debugMode){
+    camera.position.set( 0, 300, -100);
+    camera.lookAt( 0, 0, -100)
+
+    cube.position.set( 0, 0, -15);
+    subject = cube;
+    scene.add(cube); // by default, it is added at (0,0,0)
+} else {
+    camera.position.set( 0, 0, -15);
+}
+
 
 await beginningScreen()
 
@@ -41,8 +51,6 @@ if (audio_test_settings["Enable"]){
 const sound = new THREE.Audio( listener );
 
 let anim = new Animation(subject);
-
-
 
 const done = await Promise.all([loadAudio(audio_settings, sound),generateMazeAndMovement(anim, auxJs.config)]);
 
@@ -119,14 +127,8 @@ async function loadAudio(audio_settings, sound_object){
 
 async function loadTexturesAndMaze(config, textureJson){
     var textureManager = new auxThree.TextureManager(auxJs.config["Textures"], textureJson);
-    if (auxThree.debugMode){
-        camera.position.set( 0, 300, -100);
-        camera.lookAt( 0, 0, -100)
     
-        subject = cube;
-        scene.add(cube); // by default, it is added at (0,0,0)
-    } else {
-        camera.position.set( 0, 0, -15);
+    if (!auxThree.debugMode) {
         textureManager.createPlane(scene, [1200, 1200], [cube.position.x,15,0], [90,0,0], "Roof Plane", 0xAAAAAA);
         textureManager.createPlane(scene, [1200, 1200], [cube.position.x,-15,0], [90,0,0], "Floor Plane", 0x888888);
     }

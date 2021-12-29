@@ -34,7 +34,7 @@
     "Movements configs": {
         "BPM movement" : true,
         "Rotation speed multiplier" : 0.5,
-        "Min movement duration" : 300,
+        "Min movement duration" : 400,
         "Blink speed": 125,
         "Blink ON": false,
         "BPM multiplier": 4,
