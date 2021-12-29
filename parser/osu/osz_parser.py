@@ -4,9 +4,10 @@ import sys
 import os
 import shutil
 import osu_reader
+import subprocess
 
 scriptFolder = os.path.abspath(os.path.dirname(__file__))
-beatmapsFolder = os.path.join(scriptFolder, "../../beatmaps")
+beatmapsFolder = os.path.join(scriptFolder, "..","..","beatmaps")
 
 def detectDifficulty(filename):
 	return filename.split("[")[1].split("]")[0]
@@ -111,5 +112,10 @@ if __name__ == "__main__":
 	shutil.rmtree(extractionPath)
 
 	updateMapsIndex()
+
+	os.chdir(scriptFolder)
+	#For windows the commented line instead: (warning: this .cmd is not fully functional at the moment. Using linux is recommended.)
+	#subprocess.call(["maze_generator.cmd", newFilesPath])
+	subprocess.call(["./maze_generator.sh", newFilesPath])
 
 	print("Done!")

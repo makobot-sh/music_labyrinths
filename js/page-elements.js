@@ -67,6 +67,7 @@ function selectMap(){
     auxJs.config["Sound"]["Audio Path"] = mapsPath+selectionSubpath+"_audio.mp3"
     auxJs.config["Audio movement data"]["Hitpoints JSON"] = mapsPath+selectionSubpath+"_times.json"
     auxJs.config["Audio movement data"]["BPMs JSON"] = mapsPath+selectionSubpath+"_bpms.json"
+    auxJs.config["Maze"]["Maze JSON"] = mapsPath+"/"+selectedMap+"/maze.json"
     console.log(mapsPath+selectionSubpath+"_audio.mp3")
 }
 

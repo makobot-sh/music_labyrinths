@@ -1,0 +1,4 @@
+#ig everything except gitignore
+*
+!.gitignore
+
