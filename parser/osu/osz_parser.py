@@ -4,6 +4,7 @@ import sys
 import os
 import shutil
 import osu_reader
+import subprocess
 
 scriptFolder = os.path.abspath(os.path.dirname(__file__))
 beatmapsFolder = os.path.join(scriptFolder, "../../beatmaps")
@@ -111,5 +112,8 @@ if __name__ == "__main__":
 	shutil.rmtree(extractionPath)
 
 	updateMapsIndex()
+
+	os.chdir(scriptFolder)
+	subprocess.call(["./maze_generator.sh", newFilesPath])
 
 	print("Done!")

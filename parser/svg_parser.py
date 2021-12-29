@@ -1,5 +1,6 @@
 import json
 import re
+import os
 
 def get_svg_width(data):
 	size_maze_width = re.search('width="[0-9]+"', data)
@@ -32,13 +33,14 @@ def convert_lines_to_dictionary(data_set):
 if __name__ == "__main__":
 	data = []
 	print("Reading SVG file...")
-	with open('../mazegenerator/src/maze.svg') as file:
+	
+	scriptFolder = os.path.abspath(os.path.dirname(__file__))
+	beatmapsFolder = os.path.join(scriptFolder, "../mazegenerator/src/maze.svg")
+	with open(beatmapsFolder) as file:
 		data = file.read()
-
 
 	height = get_svg_height(data)
 	width  = get_svg_width(data)
-
 
 	lines_with_points = get_svg_lines(data)
 
