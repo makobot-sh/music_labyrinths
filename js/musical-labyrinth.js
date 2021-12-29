@@ -179,7 +179,7 @@ function animate() {
     //document.getElementById("counter").textContent = parseInt(document.getElementById("counter").textContent) +1;
 
     if(auxThree.debugMode){
-        camera.position.set( cube.position.x+900, 300, cube.position.z-900);
+        camera.position.set( cube.position.x, 300, cube.position.z);
     } else {
         //roofPlane.position.set(subject.position.x, 20, subject.position.z);
     }

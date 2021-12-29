@@ -22,5 +22,11 @@
         "Path": "./textures/entrance.png",
         "RepeatV": 1,
         "RepeatH": 1
+    },
+    "Exit Plane":{
+        "Enable": true,
+        "Path": "./textures/exit.png",
+        "RepeatV": 1,
+        "RepeatH": 1
     }
 }
